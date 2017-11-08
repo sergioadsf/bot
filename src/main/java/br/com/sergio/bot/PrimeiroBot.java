@@ -10,8 +10,6 @@ public class PrimeiroBot extends org.telegram.telegrambots.bots.TelegramWebhookB
 	
 	private Logger log = Logger.getLogger(PrimeiroBot.class);
 
-	
-
 	public String getBotPath() {
 		log.info("PrimeiroBot.getBotPath()");
 		return null;
@@ -22,12 +20,11 @@ public class PrimeiroBot extends org.telegram.telegrambots.bots.TelegramWebhookB
 	}
 
 	public BotApiMethod onWebhookUpdateReceived(Update arg0) {
-		log.info("PrimeiroBot.onWebhookUpdateReceived()");
 		return null;
 	}
 
 	@Override
 	public String getBotToken() {
-		return "459940218:AAHCKnwGqFnRa7gVBJBWHa2eELQ9orr2fcU";
+		return System.getenv("TOKEN_BOT_SERGIO_TESTE_16");
 	}
 }

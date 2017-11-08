@@ -15,7 +15,7 @@ public class SegundoBot extends org.telegram.telegrambots.bots.TelegramLongPolli
 
 	@Override
 	public String getBotToken() {
-		return "459940218:AAHCKnwGqFnRa7gVBJBWHa2eELQ9orr2fcU";
+		return System.getenv("TOKEN_BOT_SERGIO_TESTE_16");
 	}
 
 	public void onUpdateReceived(Update arg0) {
