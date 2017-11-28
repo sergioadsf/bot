@@ -5,17 +5,17 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.api.objects.Update;
 
 @Component
-public class SegundoBot extends org.telegram.telegrambots.bots.TelegramLongPollingBot {
+public class PollingBot extends org.telegram.telegrambots.bots.TelegramLongPollingBot {
 
-	private Logger log = Logger.getLogger(SegundoBot.class);
+	private Logger log = Logger.getLogger(PollingBot.class);
 
 	public String getBotUsername() {
-		return "SergioTest16Bot";
+		return BotConfig.USER;
 	}
 
 	@Override
 	public String getBotToken() {
-		return System.getenv("TOKEN_BOT_SERGIO_TESTE_16");
+		return BotConfig.getToken();
 	}
 
 	public void onUpdateReceived(Update arg0) {
