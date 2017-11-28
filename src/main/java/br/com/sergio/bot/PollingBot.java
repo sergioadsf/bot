@@ -22,6 +22,6 @@ public class PollingBot extends org.telegram.telegrambots.bots.TelegramLongPolli
 	}
 
 	public void onUpdateReceived(final Update update) {
-		cmd.execute(update);
+		cmd.execute(this, update);
 	}
 }

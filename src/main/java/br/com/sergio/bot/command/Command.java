@@ -1,14 +1,25 @@
 package br.com.sergio.bot.command;
 
-import org.telegram.telegrambots.api.objects.Chat;
+import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
-import org.telegram.telegrambots.api.objects.User;
 import org.telegram.telegrambots.bots.AbsSender;
 
-public interface Command {
+@Component
+public class Command {
 
-	void execute(final Update update);
+	public void execute(AbsSender sender, final Update update) {
 
-	void execute(AbsSender absSender, User user, Chat chat);
+		Message message = update.getMessage();
+		switch (message.getText()) {
+		case CmdParam.START_CMD:
+			StartCommand.getInstance().execute(sender, message);
+			break;
+
+		default:
+			break;
+		}
+
+	}
 
 }
