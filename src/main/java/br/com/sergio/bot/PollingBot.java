@@ -1,13 +1,16 @@
 package br.com.sergio.bot;
 
-import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.api.objects.Update;
 
+import br.com.sergio.bot.command.Command;
+
 @Component
 public class PollingBot extends org.telegram.telegrambots.bots.TelegramLongPollingBot {
-
-	private Logger log = Logger.getLogger(PollingBot.class);
+	
+	@Autowired
+	private Command cmd;
 
 	public String getBotUsername() {
 		return BotConfig.USER;
@@ -18,7 +21,7 @@ public class PollingBot extends org.telegram.telegrambots.bots.TelegramLongPolli
 		return BotConfig.getToken();
 	}
 
-	public void onUpdateReceived(Update arg0) {
-		log.info("SegundoBot.onUpdateReceived()");
+	public void onUpdateReceived(final Update update) {
+		cmd.execute(update);
 	}
 }
