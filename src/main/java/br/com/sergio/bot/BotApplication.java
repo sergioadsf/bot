@@ -27,7 +27,7 @@ public class BotApplication {
 		telegramBotsApi = new TelegramBotsApi();
 		try {
 			log.info("Iniciando Sergio Bot.");
-			telegramBotsApi.registerBot(bot);
+//			telegramBotsApi.registerBot(bot);
 			telegramBotsApi.registerBot(bot2);
 			log.info("Sergio Bot iniciado.");
 		} catch (TelegramApiException e) {
