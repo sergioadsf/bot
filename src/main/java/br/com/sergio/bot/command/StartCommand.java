@@ -77,6 +77,6 @@ public class StartCommand implements BotCommand {
 	}
 
 	private static String getCancelCommand(String language) {
-		return String.format(LocalisationUtil.getString("cancel", language), EmojiUtil.CROSS_MARK.toString());
+		return "Cancel";//String.format(LocalisationUtil.getString("cancel", language), EmojiUtil.CROSS_MARK.toString());
 	}
 }
