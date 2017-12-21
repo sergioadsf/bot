@@ -16,7 +16,7 @@ import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.logging.BotLogger;
 
-public class StartCommand implements BotCommand {
+public class AnalyzeCommand implements BotCommand {
 
 	public static final String LOGTAG = "STARTCOMMAND";
 
@@ -31,10 +31,12 @@ public class StartCommand implements BotCommand {
 
 		messageBuilder.append("Bem vindo, ").append(userName).append("\n");
 		messageBuilder.append("Como esta sendo seu dia hoje?");
+		messageBuilder.append("http://openweathermap.org/img/w/03d.png");
 
 		SendMessage answer = new SendMessage();
 		answer.setChatId(chat.getId().toString());
 		answer.setText(messageBuilder.toString());
+		answer.enableMarkdown(true);
 		ReplyKeyboard replyMarkup = new InlineKeyboardMarkup();
 		replyMarkup = getAlertsListKeyboard(message.getFrom().getId(), "pt");
 		answer.setReplyMarkup(replyMarkup);
@@ -49,7 +51,7 @@ public class StartCommand implements BotCommand {
 
 	public static BotCommand getInstance() {
 		if (instance == null) {
-			instance = new StartCommand();
+			instance = new AnalyzeCommand();
 		}
 		return instance;
 	}

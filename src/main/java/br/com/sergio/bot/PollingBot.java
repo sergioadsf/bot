@@ -12,13 +12,16 @@ public class PollingBot extends org.telegram.telegrambots.bots.TelegramLongPolli
 	@Autowired
 	private Command cmd;
 
+	@Autowired
+	private BotConfig botConfig;
+
 	public String getBotUsername() {
-		return BotConfig.USER;
+		return botConfig.getUser();
 	}
 
 	@Override
 	public String getBotToken() {
-		return BotConfig.getToken();
+		return botConfig.getToken();
 	}
 
 	public void onUpdateReceived(final Update update) {

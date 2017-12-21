@@ -17,6 +17,8 @@ public class Command {
 			break;
 
 		default:
+			
+			AnalyzeCommand.getInstance().execute(sender, message);
 			break;
 		}
 

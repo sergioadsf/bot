@@ -1,6 +1,7 @@
 package br.com.sergio.bot;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.api.methods.BotApiMethod;
 import org.telegram.telegrambots.api.objects.Update;
@@ -10,6 +11,9 @@ import org.telegram.telegrambots.exceptions.TelegramApiRequestException;
 public class WebhookBot extends org.telegram.telegrambots.bots.TelegramWebhookBot {
 
 	private Logger log = Logger.getLogger(WebhookBot.class);
+	
+	@Autowired
+	private BotConfig botConfig;
 
 	@Override
 	public void setWebhook(String arg0, String arg1) throws TelegramApiRequestException {
@@ -18,11 +22,11 @@ public class WebhookBot extends org.telegram.telegrambots.bots.TelegramWebhookBo
 
 	public String getBotPath() {
 		log.info("PrimeiroBot.getBotPath()");
-		return BotConfig.USER;
+		return botConfig.getUser();
 	}
 
 	public String getBotUsername() {
-		return BotConfig.USER;
+		return botConfig.getUser();
 	}
 
 	public BotApiMethod<?> onWebhookUpdateReceived(Update arg0) {
@@ -31,6 +35,6 @@ public class WebhookBot extends org.telegram.telegrambots.bots.TelegramWebhookBo
 
 	@Override
 	public String getBotToken() {
-		return BotConfig.getToken();
+		return botConfig.getToken();
 	}
 }
