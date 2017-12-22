@@ -35,8 +35,12 @@ public class CurrentForecast implements DTO {
 	@JsonProperty("dt")
 	private Long date;
 
+	@JsonProperty("main")
+	private Main main;
+
 	public CurrentForecast() {
 		weather = new ArrayList<>();
+		main = new Main();
 	}
 
 	public Long getId() {
@@ -69,6 +73,10 @@ public class CurrentForecast implements DTO {
 
 	public Long getDate() {
 		return date;
+	}
+
+	public Main getMain() {
+		return main;
 	}
 
 }

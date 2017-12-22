@@ -6,19 +6,19 @@ import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.AbsSender;
 
 @Component
-public class Command {
+public class Command extends AbsCommand {
 
 	public void execute(AbsSender sender, final Update update) {
 
 		Message message = update.getMessage();
 		switch (message.getText()) {
 		case CmdParam.START_CMD:
-			StartCommand.getInstance().execute(sender, message);
+			this.getStartCommand().execute(sender, message);
 			break;
 
 		default:
 			
-			AnalyzeCommand.getInstance().execute(sender, message);
+			this.getAnalyzeCommand().execute(sender, message);
 			break;
 		}
 

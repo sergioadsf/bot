@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Chat;
 import org.telegram.telegrambots.api.objects.Message;
@@ -16,11 +17,10 @@ import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.logging.BotLogger;
 
+@Component
 public class StartCommand implements BotCommand {
 
 	public static final String LOGTAG = "STARTCOMMAND";
-
-	private static BotCommand instance = null;
 
 	public void execute(AbsSender absSender, Message message) {
 		User user = message.getFrom();
@@ -45,13 +45,6 @@ public class StartCommand implements BotCommand {
 			BotLogger.error(LOGTAG, e);
 		}
 
-	}
-
-	public static BotCommand getInstance() {
-		if (instance == null) {
-			instance = new StartCommand();
-		}
-		return instance;
 	}
 
 	private static ReplyKeyboardMarkup getAlertsListKeyboard(Integer userId, String language) {

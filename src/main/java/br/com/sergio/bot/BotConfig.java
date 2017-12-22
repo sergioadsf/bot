@@ -12,12 +12,19 @@ public class BotConfig {
 	@Value("${api.key}")
 	private String apiKey;
 
+	@Value("${ws.url}")
+	private String wsUrl;
+
 	public final String getToken() {
 		return apiKey;
 	}
-	
+
 	public final String getUser() {
 		return apiUser;
+	}
+
+	public final String getWsUrl() {
+		return wsUrl;
 	}
 
 }
