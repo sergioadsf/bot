@@ -157,7 +157,19 @@ public enum EmojiUtil {
     LARGE_ORANGE_DIAMOND('\uD83D', '\uDD36'),
     HUNDRED_POINTS_SYMBOL('\uD83D', '\uDCAF'),
     ROUND_PUSHPIN('\uD83D', '\uDCCD'),
-    WAVING_HAND_SIGN('\uD83D', '\uDC4B');
+    WAVING_HAND_SIGN('\uD83D', '\uDC4B'),
+
+	CHRISTMAS_FACE('\uD83C', '\uDF85'),
+	CHRISTMAS_TREE('\uD83C', '\uDF84'),
+
+	BEER_MUG('\uD83C', '\uDF7A'),
+	BEER_MUGS('\uD83C', '\uDF7B'),
+
+	FIRE('\uD83D', '\uDD25'),
+	DROPLET('\uD83D', '\uDCA7'),
+	SPLASHING_SWEAT_SYMBOL('\uD83D', '\uDCA6'),
+
+	WRAPPED_PRESENT('\uD83C', '\uDF81');
 
     Character firstChar;
     Character secondChar;

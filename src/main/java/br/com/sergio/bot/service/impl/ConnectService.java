@@ -40,7 +40,7 @@ public class ConnectService implements IConnectService {
 		connection.setRequestMethod("POST");
 		connection.setDoOutput(true);
 		connection.setRequestProperty("Content-Type", "application/json");
-		connection.setRequestProperty("Accept", "text/plain");
+		connection.setRequestProperty("Accept", "application/json");
 
 		OutputStream output = connection.getOutputStream();
 		output.write(params.getBytes("UTF-8"));

@@ -12,8 +12,11 @@ public class BotConfig {
 	@Value("${api.key}")
 	private String apiKey;
 
-	@Value("${ws.url}")
-	private String wsUrl;
+	@Value("${ws.url.weathercast}")
+	private String wsUrlWeather;
+
+	@Value("${ws.url.football}")
+	private String wsUrlFootball;
 
 	public final String getToken() {
 		return apiKey;
@@ -23,8 +26,14 @@ public class BotConfig {
 		return apiUser;
 	}
 
-	public final String getWsUrl() {
-		return wsUrl;
+	public final String getWsUrlWeather() {
+		return wsUrlWeather;
 	}
+
+	public final String getWsUrlFootball() {
+		return wsUrlFootball;
+	}
+	
+	
 
 }

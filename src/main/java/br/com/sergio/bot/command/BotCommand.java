@@ -5,6 +5,6 @@ import org.telegram.telegrambots.bots.AbsSender;
 
 public interface BotCommand {
 
-	void execute(AbsSender absSender, Message message);
+	void execute(AbsSender absSender, Message message) throws Exception;
 
 }

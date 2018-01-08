@@ -10,12 +10,19 @@ public class AbsCommand {
 	@Autowired
 	private AnalyzeCommand analyzeCommand;
 
+	@Autowired
+	private LocationCommand locationCommand;
+
 	protected StartCommand getStartCommand() {
 		return startCommand;
 	}
 
 	protected AnalyzeCommand getAnalyzeCommand() {
 		return analyzeCommand;
+	}
+
+	public LocationCommand getLocationCommand() {
+		return locationCommand;
 	}
 
 }

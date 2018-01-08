@@ -18,6 +18,9 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 		<spring.boot.version>1.5.8.RELEASE</spring.boot.version>
+		<cogroo.version>4.0.0</cogroo.version>
+		<quartz.version>2.3.0</quartz.version>
+		<spring.version>5.0.2.RELEASE</spring.version>
 	</properties>
 
 	<dependencies>
@@ -35,9 +38,50 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.telegram</groupId>
 			<artifactId>telegrambots</artifactId>
 			<version>3.0.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.cogroo.lang.pt_br</groupId>
+			<artifactId>cogroo-ann-pt_br</artifactId>
+			<version>${cogroo.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.cogroo</groupId>
+			<artifactId>cogroo-nlp</artifactId>
+			<version>${cogroo.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>${quartz.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz-jobs</artifactId>
+			<version>${quartz.version}</version>
 		</dependency>
 
 	</dependencies>
