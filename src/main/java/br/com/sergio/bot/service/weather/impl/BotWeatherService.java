@@ -11,14 +11,14 @@ import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import br.com.sergio.bot.exception.NotFoundException;
+import br.com.sergio.bot.model.weather.CurrentForecast;
+import br.com.sergio.bot.model.weather.Main;
+import br.com.sergio.bot.model.weather.Weather;
 import br.com.sergio.bot.service.impl.AbsService;
 import br.com.sergio.bot.service.weather.IBotWeatherService;
 import br.com.sergio.bot.service.weather.IWeatherService;
 import br.com.sergio.bot.util.EmojiUtil;
 import br.com.sergio.bot.util.MarkdownWriter;
-import br.com.sergio.bot.weather.model.CurrentForecast;
-import br.com.sergio.bot.weather.model.Main;
-import br.com.sergio.bot.weather.model.Weather;
 
 @Service
 public class BotWeatherService extends AbsService implements IBotWeatherService {

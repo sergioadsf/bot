@@ -5,10 +5,10 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import br.com.sergio.bot.exception.NotFoundException;
+import br.com.sergio.bot.model.weather.CurrentForecast;
+import br.com.sergio.bot.model.weather.Response;
 import br.com.sergio.bot.service.impl.AbsService;
 import br.com.sergio.bot.service.weather.IWeatherService;
-import br.com.sergio.bot.weather.model.CurrentForecast;
-import br.com.sergio.bot.weather.model.Response;
 
 @Service
 public class WeatherService extends AbsService implements IWeatherService {

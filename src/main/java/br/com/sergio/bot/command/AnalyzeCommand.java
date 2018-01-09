@@ -13,6 +13,7 @@ import org.telegram.telegrambots.api.objects.User;
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
+import br.com.sergio.bot.service.football.IBotFootballService;
 import br.com.sergio.bot.service.weather.IBotWeatherService;
 import br.com.sergio.bot.util.EmojiUtil;
 import br.com.sergio.bot.util.MarkdownWriter;
@@ -24,6 +25,9 @@ public class AnalyzeCommand implements BotCommand {
 
 	@Autowired
 	private IBotWeatherService iBotWeatherService;
+
+	@Autowired
+	private IBotFootballService iBotFootballService;
 
 	public void execute(AbsSender absSender, Message message) {
 		final User user = message.getFrom();
@@ -38,6 +42,11 @@ public class AnalyzeCommand implements BotCommand {
 			String text = message.getText().toLowerCase();
 			if (isAnswerForecast(text)) {
 				iBotWeatherService.findCurrent(absSender, message);
+				return;
+			}
+
+			if (isFootball(text)) {
+				iBotFootballService.findRound(absSender, message);
 				return;
 			}
 
@@ -108,6 +117,10 @@ public class AnalyzeCommand implements BotCommand {
 
 	private boolean isAnswerForecast(String text) {
 		return text.contains("clima") || text.contains("temp") || text.contains("temperatura");
+	}
+
+	private boolean isFootball(String text) {
+		return text.contains("campeonato");
 	}
 
 	private boolean isAnswerSticker(String text) {

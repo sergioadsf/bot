@@ -1,4 +1,4 @@
-package br.com.sergio.bot.weather.model;
+package br.com.sergio.bot.model;
 
 import java.io.Serializable;
 

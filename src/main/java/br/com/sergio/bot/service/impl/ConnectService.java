@@ -51,9 +51,9 @@ public class ConnectService implements IConnectService {
 
 	private final HttpURLConnection initConnection(URL target) throws IOException {
 		Proxy proxy = ProxyConfig.get();
-		// if (proxy != null) {
-		// return (HttpURLConnection) target.openConnection(proxy);
-		// }
+		if (proxy != null) {
+			return (HttpURLConnection) target.openConnection(proxy);
+		}
 
 		return (HttpURLConnection) target.openConnection();
 

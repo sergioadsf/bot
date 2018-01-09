@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.sergio.bot.weather.model.Teste;
+import br.com.sergio.bot.model.weather.Teste;
 
 @CrossOrigin(origins = "*")
 @RestController

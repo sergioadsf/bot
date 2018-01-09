@@ -1,6 +1,8 @@
-package br.com.sergio.bot.weather.model;
+package br.com.sergio.bot.model.weather;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import br.com.sergio.bot.model.DTO;
 
 @SuppressWarnings("serial")
 public class Main implements DTO {

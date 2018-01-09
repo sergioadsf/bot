@@ -1,6 +1,6 @@
 package br.com.sergio.bot.service.weather;
 
-import br.com.sergio.bot.weather.model.CurrentForecast;
+import br.com.sergio.bot.model.weather.CurrentForecast;
 
 public interface IWeatherService {
 
