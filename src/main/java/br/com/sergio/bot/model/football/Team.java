@@ -45,7 +45,7 @@ public class Team implements DTO {
 	}
 
 	public Integer getScore() {
-		return score;
+		return score == null ? 0 : score;
 	}
 
 }

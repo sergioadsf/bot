@@ -4,7 +4,9 @@ import org.telegram.telegrambots.api.objects.Location;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.bots.AbsSender;
 
-public interface IBotWeatherService {
+import br.com.sergio.bot.service.IService;
+
+public interface IBotWeatherService extends IService {
 	
 	String[] keywords = new String[] { "cidade", "clima", "temperatura", "temp" };
 

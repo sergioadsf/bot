@@ -33,14 +33,33 @@ public class MarkdownWriter {
 		return append("\n");
 	}
 
-	public MarkdownWriter bold(String text) {
+	public MarkdownWriter bold(Object text) {
 		return append("*").append(text).append("*");
+	}
+
+	public MarkdownWriter space() {
+
+		return space(1);
+	}
+
+	public MarkdownWriter space(int qtd) {
+		for (int cont = 0; cont < qtd; cont++)
+			append(" ");
+
+		return this;
+	}
+
+	public MarkdownWriter repeat(String value, int qtd) {
+		for (int cont = 0; cont < qtd; cont++)
+			append(value);
+		
+		return this;
 	}
 
 	public MarkdownWriter italic(String text) {
 		return append("_").append(text).append("_");
 	}
-	
+
 	public MarkdownWriter capitalize(String description) {
 		return append(description.substring(0, 1).toUpperCase()).append(description.substring(1));
 	}
@@ -52,10 +71,9 @@ public class MarkdownWriter {
 	public MarkdownWriter image(String title, String url) {
 		return append("[").append(title).append("](").append(url).append(")");
 	}
-	
+
 	public String get() {
 		return message.toString();
 	}
-
 
 }

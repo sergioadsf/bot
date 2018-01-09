@@ -120,7 +120,7 @@ public class AnalyzeCommand implements BotCommand {
 	}
 
 	private boolean isFootball(String text) {
-		return text.contains("campeonato");
+		return text.contains("campeonato") || text.contains("resultado") ;
 	}
 
 	private boolean isAnswerSticker(String text) {
