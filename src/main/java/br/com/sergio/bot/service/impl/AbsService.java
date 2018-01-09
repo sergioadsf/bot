@@ -27,7 +27,7 @@ public abstract class AbsService {
 	@Autowired
 	private IConnectService connectService;
 
-	protected <E extends DTO> E strToObj(String str, Class<E> clazz)
+	protected <E extends Object> E strToObj(String str, Class<E> clazz)
 			throws JsonParseException, JsonMappingException, IOException {
 
 		return getMapper().readValue(str, clazz);

@@ -12,7 +12,7 @@ public class FootSearch implements DTO {
 	@JsonProperty("rodada")
 	private Integer round;
 
-	@JsonProperty("tipo_campeonato")
+	@JsonProperty("campeonato")
 	private Integer competition;
 
 	public FootSearch() {

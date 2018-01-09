@@ -18,7 +18,7 @@ public class FootballService extends AbsService implements IFootballService {
 
 	@Override
 	public List<Match> findRound(FootSearch fooatSearch) throws Exception {
-		String url = getBotConfig().getWsUrlFootball() + "/" + CALENDAR + "/" + ROUND + "/";
+		String url = getBotConfig().getWsUrlFootball() + "/" + CALENDAR + "/" + ROUND;
 		String json = this.getConnectService().post(url, objToStr(fooatSearch));
 		Response<List<Match>> response = strToObj(json, new TypeReference<Response<List<Match>>>() {
 		});
