@@ -40,17 +40,17 @@ public abstract class AbsBotAnalyzeCommand implements AbsBotCommand {
 
 		try {
 			if (isCallback) {
-				executeCallback(absSender, message, msg, text);
+				executeCallback(absSender, message, user, msg, text);
 			} else {
 				executeMessage(absSender, message, msg, text);
 			}
 		} catch (AnswerException e) {
 
-			answer = sorryMessage(msg, msg.getId());
+			answer = sorryMessage(msg, msg.getChatId());
 			send(absSender, answer);
 		} catch (Exception e1) {
 
-			answer = errorMessage(msg.getId(), e1);
+			answer = errorMessage(msg.getChatId(), e1);
 			send(absSender, answer);
 		}
 
@@ -64,7 +64,7 @@ public abstract class AbsBotAnalyzeCommand implements AbsBotCommand {
 		}
 	}
 
-	abstract void executeCallback(AbsSender absSender, Message message, MarkdownWriter msg, String text)
+	abstract void executeCallback(AbsSender absSender, Message message, User user, MarkdownWriter msg, String text)
 			throws AnswerException, Exception;
 
 	abstract void executeMessage(AbsSender absSender, Message message, MarkdownWriter msg, String text)

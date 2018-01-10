@@ -18,6 +18,11 @@ public class FootSearch implements DTO {
 	public FootSearch() {
 	}
 
+	public FootSearch(Integer competition) {
+		super();
+		this.competition = competition;
+	}
+
 	public FootSearch(Integer round, Integer competition) {
 		super();
 		this.round = round;

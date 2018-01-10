@@ -8,11 +8,13 @@ import org.telegram.telegrambots.api.methods.send.SendLocation;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.methods.send.SendSticker;
 import org.telegram.telegrambots.api.objects.Message;
+import org.telegram.telegrambots.api.objects.User;
 import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import br.com.sergio.bot.exception.AnswerException;
+import br.com.sergio.bot.model.football.FootSearch;
 import br.com.sergio.bot.model.football.TipoCampeonato;
 import br.com.sergio.bot.service.football.IBotFootballService;
 import br.com.sergio.bot.service.weather.IBotWeatherService;
@@ -28,16 +30,17 @@ public class AnalyzeCommand extends AbsBotAnalyzeCommand {
 	private IBotFootballService iBotFootballService;
 
 	@Override
-	void executeCallback(AbsSender absSender, Message message, MarkdownWriter msg, String text) throws AnswerException, Exception {
+	void executeCallback(AbsSender absSender, Message message, User user, MarkdownWriter msg, String text) throws AnswerException, Exception {
 
 		TipoCampeonato tipo = isResult(text);
 		if (tipo != null) {
+			IBotFootballService.next.put(user.getId(), new FootSearch(tipo.getValue()));
 			iBotFootballService.askRound(absSender, message, msg, tipo);
 			return;
 		}
 
 		if (isCancel(text)) {
-			cancelMessage(absSender, message, msg.getId());
+			cancelMessage(absSender, message, msg.getChatId());
 			return;
 		}
 		
@@ -46,7 +49,7 @@ public class AnalyzeCommand extends AbsBotAnalyzeCommand {
 
 	@Override
 	void executeMessage(AbsSender absSender, Message message, MarkdownWriter msg, String text) throws AnswerException, Exception {
-		Long chatId = msg.getId();
+		Long chatId = msg.getChatId();
 		if (isAnswerForecast(text)) {
 			iBotWeatherService.findCurrent(absSender, message);
 			return;

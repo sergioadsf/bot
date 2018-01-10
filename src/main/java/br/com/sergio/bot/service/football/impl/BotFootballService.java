@@ -58,7 +58,7 @@ public class BotFootballService extends AbsService implements IBotFootballServic
 	public void askRound(AbsSender absSender, Message message, MarkdownWriter msg, TipoCampeonato tipo) {
 
 		msg.append("Informe a rodada desejada do campeonato [").append(tipo)
-				.append("]! Selecione abaixo ou digite o numero da mesma. [").append(tipo.getTipo()).append("].")
+				.append("]! Selecione abaixo ou digite o numero da mesma. [").append(tipo.getValue()).append("].")
 				.newLine();
 
 		ReplyKeyboard replyMarkup = new InlineKeyboardMarkup();
@@ -66,7 +66,7 @@ public class BotFootballService extends AbsService implements IBotFootballServic
 
 		SendMessage answer = new SendMessage();
 		answer.setReplyMarkup(replyMarkup);
-		answer.setChatId(msg.getId());
+		answer.setChatId(msg.getChatId());
 		answer.setText(msg.get());
 		answer.enableMarkdown(true);
 		try {
@@ -84,7 +84,7 @@ public class BotFootballService extends AbsService implements IBotFootballServic
 		msg.append("Infelizmente ainda não conheço essa cidade!").newLine();
 
 		SendMessage answer = new SendMessage();
-		answer.setChatId(msg.getId());
+		answer.setChatId(msg.getChatId());
 		answer.setText(msg.get());
 		answer.enableMarkdown(true);
 		try {
@@ -119,7 +119,7 @@ public class BotFootballService extends AbsService implements IBotFootballServic
 		}
 
 		SendMessage answer = new SendMessage();
-		answer.setChatId(msg.getId());
+		answer.setChatId(msg.getChatId());
 		answer.setText(msg.get());
 
 		answer.enableMarkdown(true);

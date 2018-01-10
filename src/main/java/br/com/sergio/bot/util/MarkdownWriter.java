@@ -2,15 +2,15 @@ package br.com.sergio.bot.util;
 
 public class MarkdownWriter {
 
-	private Long id;
+	private Long chatId;
 	private StringBuilder message;
 
 	private MarkdownWriter() {
 		this(null);
 	}
 
-	private MarkdownWriter(Long id) {
-		this.id = id;
+	private MarkdownWriter(Long chatId) {
+		this.chatId = chatId;
 		this.message = new StringBuilder();
 	}
 
@@ -86,8 +86,8 @@ public class MarkdownWriter {
 		return message.toString();
 	}
 
-	public Long getId() {
-		return id;
+	public Long getChatId() {
+		return chatId;
 	}
 
 }

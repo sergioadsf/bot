@@ -15,11 +15,11 @@ public enum TipoCampeonato {
 		this.name = name;
 	}
 
-	public int getTipo() {
+	public int getValue() {
 		return value;
 	}
 
-	public String getNome() {
+	public String getName() {
 		return name;
 	}
 
