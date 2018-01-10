@@ -8,7 +8,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
-import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.bots.AbsSender;
@@ -18,7 +17,7 @@ import br.com.sergio.bot.exception.NotFoundException;
 import br.com.sergio.bot.model.football.FootSearch;
 import br.com.sergio.bot.model.football.Match;
 import br.com.sergio.bot.model.football.Team;
-import br.com.sergio.bot.model.football.TipoCampeonato;
+import br.com.sergio.bot.model.football.TipoRodada;
 import br.com.sergio.bot.service.football.IBotFootballService;
 import br.com.sergio.bot.service.football.IFootballService;
 import br.com.sergio.bot.service.impl.AbsService;
@@ -33,21 +32,14 @@ public class BotFootballService extends AbsService implements IBotFootballServic
 	private IFootballService wService;
 
 	@Override
-	public void findRound(AbsSender absSender, Message message) throws Exception {
+	public void findRound(AbsSender absSender, MarkdownWriter msg, FootSearch footSearch) throws Exception {
 		try {
-			String[] words = message.getText().split(" ");
-
 			// TODO: back to improve this validation
-			if (words.length == 3) {
-				List<Match> listMatch = wService
-						.findRound(new FootSearch(TipoCampeonato.value(words[1]), Integer.valueOf(words[2])));
-				sendDefaultMessage(absSender, message, listMatch);
-			} else {
-
-			}
+			List<Match> listMatch = wService.findRound(footSearch);
+			sendDefaultMessage(absSender, msg, listMatch);
 
 		} catch (NotFoundException e) {
-			sendErrorMessage(absSender, message);
+			sendErrorMessage(absSender, msg);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -55,14 +47,12 @@ public class BotFootballService extends AbsService implements IBotFootballServic
 	}
 
 	@Override
-	public void askRound(AbsSender absSender, Message message, MarkdownWriter msg, TipoCampeonato tipo) {
+	public void askRound(AbsSender absSender, MarkdownWriter msg) {
 
-		msg.append("Informe a rodada desejada do campeonato [").append(tipo)
-				.append("]! Selecione abaixo ou digite o numero da mesma. [").append(tipo.getValue()).append("].")
-				.newLine();
+		msg.append("Informe a rodada desejada do campeonato! Selecione abaixo ou digite o numero da mesma.").newLine();
 
 		ReplyKeyboard replyMarkup = new InlineKeyboardMarkup();
-		replyMarkup = KeyboardUtil.getListInlineKeyboard(message.getFrom().getId(), "pt", "Última", "Próxima");
+		replyMarkup = KeyboardUtil.getListInlineKeyboard(msg.getUserId(), "pt", TipoRodada.names());
 
 		SendMessage answer = new SendMessage();
 		answer.setReplyMarkup(replyMarkup);
@@ -77,8 +67,7 @@ public class BotFootballService extends AbsService implements IBotFootballServic
 		}
 	}
 
-	private void sendErrorMessage(AbsSender absSender, Message message) {
-		MarkdownWriter msg = this.getMsgWriter(message);
+	private void sendErrorMessage(AbsSender absSender, MarkdownWriter msg) {
 
 		msg.emoji(EmojiUtil.DISAPPOINTED_FACE).newLine();
 		msg.append("Infelizmente ainda não conheço essa cidade!").newLine();
@@ -94,9 +83,8 @@ public class BotFootballService extends AbsService implements IBotFootballServic
 		}
 	}
 
-	private void sendDefaultMessage(AbsSender absSender, Message message, List<Match> listMatch)
+	private void sendDefaultMessage(AbsSender absSender, MarkdownWriter msg, List<Match> listMatch)
 			throws TelegramApiException {
-		MarkdownWriter msg = getMsgWriter(message);
 
 		String dateStr = "";
 		for (Match match : listMatch) {
@@ -118,12 +106,8 @@ public class BotFootballService extends AbsService implements IBotFootballServic
 			msg.space().repeat("-", 3).space(2).append(match.getStadium()).newLine();
 		}
 
-		SendMessage answer = new SendMessage();
-		answer.setChatId(msg.getChatId());
-		answer.setText(msg.get());
-
-		answer.enableMarkdown(true);
-		absSender.sendMessage(answer);
+		msg.newLine();
+		askRound(absSender, msg);
 	}
 
 	@Override

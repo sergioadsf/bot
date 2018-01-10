@@ -123,7 +123,11 @@ public class BotWeatherService extends AbsService implements IBotWeatherService 
 
 	@Override
 	public boolean isKeyword(String text) {
-		return Arrays.asList("clima", "temp", "temperatura").contains(text);
+		for(String value : Arrays.asList("clima", "temp", "temperatura"))
+			if(text.contains(value)) {
+				return true;
+			}
+		return false;
 	}
 
 }

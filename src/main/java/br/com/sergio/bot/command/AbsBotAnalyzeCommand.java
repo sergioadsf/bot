@@ -10,6 +10,7 @@ import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import br.com.sergio.bot.exception.AnswerException;
+import br.com.sergio.bot.model.ParamCMD;
 import br.com.sergio.bot.util.EmojiUtil;
 import br.com.sergio.bot.util.MarkdownWriter;
 
@@ -37,6 +38,18 @@ public abstract class AbsBotAnalyzeCommand implements AbsBotCommand {
 		SendMessage answer = null;
 
 		MarkdownWriter msg = MarkdownWriter.start(chat.getId()).bold(userName).newLine();
+		msg.userId(user.getId());
+
+		if (AbsCommand.next.containsKey(user.getId())) {
+			ParamCMD paramCMD = AbsCommand.next.get(user.getId());
+			AbsBotAnalyzeCommand absBotAnalyzeCommand = (AbsBotAnalyzeCommand) paramCMD.getCmd();
+			if (isCallback) {
+				absBotAnalyzeCommand.executeCallback(absSender, message, user, msg, text);
+			} else {
+				absBotAnalyzeCommand.executeMessage(absSender, message, msg, text);
+			}
+			return;
+		}
 
 		try {
 			if (isCallback) {

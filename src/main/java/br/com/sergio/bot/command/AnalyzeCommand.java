@@ -14,8 +14,10 @@ import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import br.com.sergio.bot.exception.AnswerException;
+import br.com.sergio.bot.model.ParamCMD;
 import br.com.sergio.bot.model.football.FootSearch;
 import br.com.sergio.bot.model.football.TipoCampeonato;
+import br.com.sergio.bot.model.football.TipoRodada;
 import br.com.sergio.bot.service.football.IBotFootballService;
 import br.com.sergio.bot.service.weather.IBotWeatherService;
 import br.com.sergio.bot.util.MarkdownWriter;
@@ -30,33 +32,48 @@ public class AnalyzeCommand extends AbsBotAnalyzeCommand {
 	private IBotFootballService iBotFootballService;
 
 	@Override
-	void executeCallback(AbsSender absSender, Message message, User user, MarkdownWriter msg, String text) throws AnswerException, Exception {
+	void executeCallback(AbsSender absSender, Message message, User user, MarkdownWriter msg, String text)
+			throws AnswerException, Exception {
 
-		TipoCampeonato tipo = isResult(text);
-		if (tipo != null) {
-			IBotFootballService.next.put(user.getId(), new FootSearch(tipo.getValue()));
-			iBotFootballService.askRound(absSender, message, msg, tipo);
+		TipoCampeonato tipoCampeonato = isResult(text);
+		if (tipoCampeonato != null) {
+			AbsCommand.next.put(user.getId(), new ParamCMD<Object>(this, new FootSearch(tipoCampeonato.getValue())));
+			iBotFootballService.askRound(absSender, msg);
+			return;
+		}
+
+		TipoRodada tipoRodada = isRound(text);
+		if (tipoRodada != null && AbsCommand.next.containsKey(user.getId())) {
+			ParamCMD paramCMD = AbsCommand.next.get(user.getId());
+			FootSearch footSearch = (FootSearch) paramCMD.getParam();
+			footSearch.setRound(tipoRodada.getValue());
+			iBotFootballService.findRound(absSender, msg, footSearch);
 			return;
 		}
 
 		if (isCancel(text)) {
 			cancelMessage(absSender, message, msg.getChatId());
+			AbsCommand.next.remove(msg.getUserId());
 			return;
 		}
-		
+
 		throw new AnswerException("");
 	}
 
 	@Override
-	void executeMessage(AbsSender absSender, Message message, MarkdownWriter msg, String text) throws AnswerException, Exception {
+	void executeMessage(AbsSender absSender, Message message, MarkdownWriter msg, String text)
+			throws AnswerException, Exception {
 		Long chatId = msg.getChatId();
 		if (isAnswerForecast(text)) {
 			iBotWeatherService.findCurrent(absSender, message);
 			return;
 		}
 
-		if (isFootball(text)) {
-			iBotFootballService.findRound(absSender, message);
+		if (AbsCommand.next.containsKey(msg.getUserId())) {
+			ParamCMD paramCMD = AbsCommand.next.get(msg.getUserId());
+			FootSearch footSearch = (FootSearch) paramCMD.getParam();
+			footSearch.setRound(Integer.valueOf(text));
+			iBotFootballService.findRound(absSender, msg, footSearch);
 			return;
 		}
 
@@ -82,18 +99,21 @@ public class AnalyzeCommand extends AbsBotAnalyzeCommand {
 
 			return;
 		}
-		
+
 		throw new AnswerException("");
 	}
-	
+
 	@Override
 	public void execute(AbsSender absSender, Message message) throws Exception {
 		throw new Exception("Not allowed!");
 	}
 
-
 	private TipoCampeonato isResult(String text) {
 		return TipoCampeonato.contains(text);
+	}
+
+	private TipoRodada isRound(String text) {
+		return TipoRodada.contains(text);
 	}
 
 	private void cancelMessage(AbsSender absSender, Message message, Long chatId) throws TelegramApiException {

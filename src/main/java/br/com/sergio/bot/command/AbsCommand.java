@@ -2,6 +2,7 @@ package br.com.sergio.bot.command;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
 
@@ -9,7 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 
+import br.com.sergio.bot.model.ParamCMD;
+
 public class AbsCommand {
+	
+	@SuppressWarnings("rawtypes")
+	public static Map<Integer, ParamCMD> next = new ConcurrentHashMap<>();
 
 	@Autowired
 	private StartCommand startCommand;
@@ -45,6 +51,9 @@ public class AbsCommand {
 	}
 
 	protected AbsBotCommand getCommand(String cmd) {
+		if(cmd.contains("@"))
+			cmd = cmd.substring(0, cmd.indexOf("@"));
+		
 		AbsBotCommand absBotCommand = commands.get(cmd);
 		return absBotCommand == null ? analyzeCommand : absBotCommand;
 	}

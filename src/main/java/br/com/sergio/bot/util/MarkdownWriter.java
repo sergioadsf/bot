@@ -3,6 +3,8 @@ package br.com.sergio.bot.util;
 public class MarkdownWriter {
 
 	private Long chatId;
+	private Integer userId;
+	private String name;
 	private StringBuilder message;
 
 	private MarkdownWriter() {
@@ -82,12 +84,30 @@ public class MarkdownWriter {
 		return append("[").append(title).append("](").append(url).append(")");
 	}
 
+	public MarkdownWriter name(String name) {
+		this.name = name;
+		return this;
+	}
+
+	public MarkdownWriter userId(Integer userId) {
+		this.userId = userId;
+		return this;
+	}
+
 	public String get() {
 		return message.toString();
 	}
 
 	public Long getChatId() {
 		return chatId;
+	}
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 }
