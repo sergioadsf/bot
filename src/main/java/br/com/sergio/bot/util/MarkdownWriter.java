@@ -2,14 +2,24 @@ package br.com.sergio.bot.util;
 
 public class MarkdownWriter {
 
+	private Long id;
 	private StringBuilder message;
 
 	private MarkdownWriter() {
+		this(null);
+	}
+
+	private MarkdownWriter(Long id) {
+		this.id = id;
 		this.message = new StringBuilder();
 	}
 
 	public static MarkdownWriter start() {
 		return new MarkdownWriter();
+	}
+
+	public static MarkdownWriter start(Long id) {
+		return new MarkdownWriter(id);
 	}
 
 	public MarkdownWriter append(Object text) {
@@ -52,7 +62,7 @@ public class MarkdownWriter {
 	public MarkdownWriter repeat(String value, int qtd) {
 		for (int cont = 0; cont < qtd; cont++)
 			append(value);
-		
+
 		return this;
 	}
 
@@ -74,6 +84,10 @@ public class MarkdownWriter {
 
 	public String get() {
 		return message.toString();
+	}
+
+	public Long getId() {
+		return id;
 	}
 
 }

@@ -8,8 +8,6 @@ import br.com.sergio.bot.service.IService;
 
 public interface IBotWeatherService extends IService {
 	
-	String[] keywords = new String[] { "cidade", "clima", "temperatura", "temp" };
-
 	void findCurrent(AbsSender absSender, Message message) throws Exception;
 
 	void findCurrent(AbsSender absSender, Message message, Location location) throws Exception;

@@ -14,8 +14,6 @@ import br.com.sergio.bot.service.weather.IBotWeatherService;
 @Component
 public class LocationCommand extends BotLocationCommand {
 
-	public static final String LOGTAG = "STARTCOMMAND";
-
 	@Autowired
 	private IBotWeatherService iBotWeatherService;
 

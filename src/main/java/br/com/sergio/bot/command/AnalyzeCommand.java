@@ -7,21 +7,19 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.api.methods.send.SendLocation;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.methods.send.SendSticker;
-import org.telegram.telegrambots.api.objects.Chat;
 import org.telegram.telegrambots.api.objects.Message;
-import org.telegram.telegrambots.api.objects.User;
+import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
+import br.com.sergio.bot.exception.AnswerException;
+import br.com.sergio.bot.model.football.TipoCampeonato;
 import br.com.sergio.bot.service.football.IBotFootballService;
 import br.com.sergio.bot.service.weather.IBotWeatherService;
-import br.com.sergio.bot.util.EmojiUtil;
 import br.com.sergio.bot.util.MarkdownWriter;
 
 @Component
-public class AnalyzeCommand implements BotCommand {
-
-	public static final String LOGTAG = "STARTCOMMAND";
+public class AnalyzeCommand extends AbsBotAnalyzeCommand {
 
 	@Autowired
 	private IBotWeatherService iBotWeatherService;
@@ -29,86 +27,88 @@ public class AnalyzeCommand implements BotCommand {
 	@Autowired
 	private IBotFootballService iBotFootballService;
 
-	public void execute(AbsSender absSender, Message message) {
-		final User user = message.getFrom();
-		String userName = user.getFirstName() + " " + user.getLastName();
-		MarkdownWriter msg = MarkdownWriter.start().bold(userName).newLine();
-		final Chat chat = message.getChat();
-		SendMessage answer = null;
+	@Override
+	void executeCallback(AbsSender absSender, Message message, MarkdownWriter msg, String text) throws AnswerException, Exception {
 
-		Long chatId = chat.getId();
-		try {
-
-			String text = message.getText().toLowerCase();
-			if (isAnswerForecast(text)) {
-				iBotWeatherService.findCurrent(absSender, message);
-				return;
-			}
-
-			if (isFootball(text)) {
-				iBotFootballService.findRound(absSender, message);
-				return;
-			}
-
-			if (isAnswerSticker(text)) {
-				SendSticker s = new SendSticker();
-				s.setChatId(chatId);
-				s.setSticker("Smiling Face With Heart-Shaped Eye");
-				File f = new File(AnalyzeCommand.class.getResource("/static/sticker/corleone/corleone-romantico.jfif")
-						.toString().substring(6));
-				s.setNewSticker(f);
-
-				absSender.sendSticker(s);
-				return;
-			}
-
-			if (isAnswerLocation(text)) {
-				SendLocation location = new SendLocation();
-				location.setChatId(chatId);
-				// -16.651556, -49.243090
-				location.setLatitude(-16.651556f);
-				location.setLongitude(-49.243090f);
-				absSender.sendLocation(location);
-
-				return;
-			}
-
-			answer = sorryMessage(msg, chatId);
-
-		} catch (Exception e1) {
-
-			answer = errorMessage(chatId, e1);
+		TipoCampeonato tipo = isResult(text);
+		if (tipo != null) {
+			iBotFootballService.askRound(absSender, message, msg, tipo);
+			return;
 		}
 
-		try {
-			absSender.sendMessage(answer);
-		} catch (TelegramApiException e) {
-			e.printStackTrace();
+		if (isCancel(text)) {
+			cancelMessage(absSender, message, msg.getId());
+			return;
+		}
+		
+		throw new AnswerException("");
+	}
+
+	@Override
+	void executeMessage(AbsSender absSender, Message message, MarkdownWriter msg, String text) throws AnswerException, Exception {
+		Long chatId = msg.getId();
+		if (isAnswerForecast(text)) {
+			iBotWeatherService.findCurrent(absSender, message);
+			return;
 		}
 
+		if (isFootball(text)) {
+			iBotFootballService.findRound(absSender, message);
+			return;
+		}
+
+		if (isAnswerSticker(text)) {
+			SendSticker s = new SendSticker();
+			s.setChatId(chatId);
+			s.setSticker("Smiling Face With Heart-Shaped Eye");
+			File f = new File(AnalyzeCommand.class.getResource("/static/sticker/corleone/corleone-romantico.jfif")
+					.toString().substring(6));
+			s.setNewSticker(f);
+
+			absSender.sendSticker(s);
+			return;
+		}
+
+		if (isAnswerLocation(text)) {
+			SendLocation location = new SendLocation();
+			location.setChatId(chatId);
+			// -16.651556, -49.243090
+			location.setLatitude(-16.651556f);
+			location.setLongitude(-49.243090f);
+			absSender.sendLocation(location);
+
+			return;
+		}
+		
+		throw new AnswerException("");
+	}
+	
+	@Override
+	public void execute(AbsSender absSender, Message message) throws Exception {
+		throw new Exception("Not allowed!");
 	}
 
-	private SendMessage errorMessage(Long chatId, Exception e1) {
-		SendMessage answer;
-		answer = new SendMessage();
-		answer.setChatId(chatId.toString());
-		answer.setText(e1.getMessage());
-		answer.enableMarkdown(true);
-		return answer;
+
+	private TipoCampeonato isResult(String text) {
+		return TipoCampeonato.contains(text);
 	}
 
-	private SendMessage sorryMessage(MarkdownWriter msg, Long chatId) {
-		msg.emoji(EmojiUtil.FLUSHED_FACE);
-		msg.emoji(EmojiUtil.FLUSHED_FACE);
-		msg.append(
-				" eh eh então rs to até com vergonha, porém ainda não aprendi a responder sobre isso. Sou novo ainda com o tempo aprendo! ")
-				.newLine();
-
+	private void cancelMessage(AbsSender absSender, Message message, Long chatId) throws TelegramApiException {
+		MarkdownWriter msg = MarkdownWriter.start();
+		msg.append("Gostaria de alguma outra informação? ").newLine();
 		SendMessage answer = new SendMessage();
 		answer.setChatId(chatId.toString());
 		answer.setText(msg.get());
 		answer.enableMarkdown(true);
-		return answer;
+		ReplyKeyboardRemove replyKeyboard = new ReplyKeyboardRemove();
+		answer.setReplyMarkup(replyKeyboard);
+		// absSender.forwardMessage(new ForwardMessage(chatId, chatId,
+		// message.getMessageId()));
+		absSender.sendMessage(answer);
+	}
+
+	private boolean isCancel(String text) {
+		return text.toLowerCase().contains("cancelar");
 	}
 
 	private boolean isAnswerLocation(String text) {
@@ -116,11 +116,11 @@ public class AnalyzeCommand implements BotCommand {
 	}
 
 	private boolean isAnswerForecast(String text) {
-		return text.contains("clima") || text.contains("temp") || text.contains("temperatura");
+		return iBotWeatherService.isKeyword(text);
 	}
 
 	private boolean isFootball(String text) {
-		return text.contains("campeonato") || text.contains("resultado") ;
+		return iBotFootballService.isKeyword(text);
 	}
 
 	private boolean isAnswerSticker(String text) {

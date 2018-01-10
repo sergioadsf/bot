@@ -1,5 +1,7 @@
 package br.com.sergio.bot.service.weather.impl;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
@@ -110,13 +112,18 @@ public class BotWeatherService extends AbsService implements IBotWeatherService 
 		return texts[1];
 	}
 
-	private boolean isKeywords(String token) {
-		for (String key : keywords) {
-			if (token.toLowerCase().equals(key)) {
-				return true;
-			}
-		}
-		return false;
+//	private boolean isKeywords(String token) {
+//		for (String key : keywords) {
+//			if (token.toLowerCase().equals(key)) {
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
+
+	@Override
+	public boolean isKeyword(String text) {
+		return Arrays.asList("clima", "temp", "temperatura").contains(text);
 	}
 
 }

@@ -18,7 +18,7 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.logging.BotLogger;
 
 @Component
-public class StartCommand implements BotCommand {
+public class StartCommand implements AbsBotCommand {
 
 	public static final String LOGTAG = "STARTCOMMAND";
 
@@ -69,4 +69,5 @@ public class StartCommand implements BotCommand {
 	private static String getCancelCommand(String language) {
 		return "Cancel";//String.format(LocalisationUtil.getString("cancel", language), EmojiUtil.CROSS_MARK.toString());
 	}
+
 }

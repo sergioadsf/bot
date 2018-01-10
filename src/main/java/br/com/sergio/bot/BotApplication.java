@@ -25,12 +25,11 @@ public class BotApplication {
 	}
 
 	@Autowired
-	private void init(WebhookBot bot, PollingBot bot2) {
+	private void init(PollingBot bot) {
 		telegramBotsApi = new TelegramBotsApi();
 		try {
 			log.info("Iniciando Sergio Bot.");
-//			telegramBotsApi.registerBot(bot);
-			telegramBotsApi.registerBot(bot2);
+			telegramBotsApi.registerBot(bot);
 			log.info("Sergio Bot iniciado.");
 		} catch (TelegramApiException e) {
 			e.printStackTrace();

@@ -4,11 +4,11 @@ import org.telegram.telegrambots.api.objects.Location;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.bots.AbsSender;
 
-public abstract class BotLocationCommand implements BotCommand {
+public abstract class BotLocationCommand implements AbsBotCommand {
 
 	@Override
 	public void execute(AbsSender absSender, Message message) throws Exception {
-		throw new Exception("não permitido");
+		execute(absSender, message, message.getLocation());
 	}
 
 	public abstract void execute(AbsSender absSender, Message message, Location location) throws Exception;
