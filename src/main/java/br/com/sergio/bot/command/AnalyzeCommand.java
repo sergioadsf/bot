@@ -4,7 +4,6 @@ import java.io.File;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.api.methods.send.SendLocation;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.methods.send.SendSticker;
 import org.telegram.telegrambots.api.objects.Message;
@@ -13,6 +12,7 @@ import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
+import br.com.sergio.bot.action.AbsAction;
 import br.com.sergio.bot.exception.AnswerException;
 import br.com.sergio.bot.model.ParamCMD;
 import br.com.sergio.bot.model.football.FootSearch;
@@ -32,7 +32,7 @@ public class AnalyzeCommand extends AbsBotAnalyzeCommand {
 	private IBotFootballService iBotFootballService;
 
 	@Override
-	void executeCallback(AbsSender absSender, Message message, User user, MarkdownWriter msg, String text)
+	void executeCallback(AbsSender absSender, User user, MarkdownWriter msg, String text)
 			throws AnswerException, Exception {
 
 		TipoCampeonato tipoCampeonato = isResult(text);
@@ -52,7 +52,7 @@ public class AnalyzeCommand extends AbsBotAnalyzeCommand {
 		}
 
 		if (isCancel(text)) {
-			cancelMessage(absSender, message, msg.getChatId());
+			cancelMessage(absSender, msg);
 			AbsCommand.next.remove(msg.getUserId());
 			return;
 		}
@@ -61,11 +61,10 @@ public class AnalyzeCommand extends AbsBotAnalyzeCommand {
 	}
 
 	@Override
-	void executeMessage(AbsSender absSender, Message message, MarkdownWriter msg, String text)
+	void executeMessage(AbsSender absSender, MarkdownWriter msg, String text)
 			throws AnswerException, Exception {
-		Long chatId = msg.getChatId();
 		if (isAnswerForecast(text)) {
-			iBotWeatherService.findCurrent(absSender, message);
+			iBotWeatherService.findCurrent(absSender, msg, text);
 			return;
 		}
 
@@ -79,7 +78,7 @@ public class AnalyzeCommand extends AbsBotAnalyzeCommand {
 
 		if (isAnswerSticker(text)) {
 			SendSticker s = new SendSticker();
-			s.setChatId(chatId);
+			s.setChatId(msg.getChatId());
 			s.setSticker("Smiling Face With Heart-Shaped Eye");
 			File f = new File(AnalyzeCommand.class.getResource("/static/sticker/corleone/corleone-romantico.jfif")
 					.toString().substring(6));
@@ -89,22 +88,11 @@ public class AnalyzeCommand extends AbsBotAnalyzeCommand {
 			return;
 		}
 
-		if (isAnswerLocation(text)) {
-			SendLocation location = new SendLocation();
-			location.setChatId(chatId);
-			// -16.651556, -49.243090
-			location.setLatitude(-16.651556f);
-			location.setLongitude(-49.243090f);
-			absSender.sendLocation(location);
-
-			return;
-		}
-
 		throw new AnswerException("");
 	}
 
 	@Override
-	public void execute(AbsSender absSender, Message message) throws Exception {
+	public AbsAction execute(AbsSender absSender, Message message) throws Exception {
 		throw new Exception("Not allowed!");
 	}
 
@@ -116,11 +104,10 @@ public class AnalyzeCommand extends AbsBotAnalyzeCommand {
 		return TipoRodada.contains(text);
 	}
 
-	private void cancelMessage(AbsSender absSender, Message message, Long chatId) throws TelegramApiException {
-		MarkdownWriter msg = MarkdownWriter.start();
+	private void cancelMessage(AbsSender absSender, MarkdownWriter msg) throws TelegramApiException {
 		msg.append("Gostaria de alguma outra informação? ").newLine();
 		SendMessage answer = new SendMessage();
-		answer.setChatId(chatId.toString());
+		answer.setChatId(msg.getChatId());
 		answer.setText(msg.get());
 		answer.enableMarkdown(true);
 		ReplyKeyboardRemove replyKeyboard = new ReplyKeyboardRemove();

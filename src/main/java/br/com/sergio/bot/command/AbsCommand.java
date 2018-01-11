@@ -10,12 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 
+import br.com.sergio.bot.model.ParamAction;
 import br.com.sergio.bot.model.ParamCMD;
 
+@SuppressWarnings("rawtypes")
 public class AbsCommand {
 	
-	@SuppressWarnings("rawtypes")
 	public static Map<Integer, ParamCMD> next = new ConcurrentHashMap<>();
+	
+	public static Map<Integer, ParamAction> nextAction = new ConcurrentHashMap<>();
 
 	@Autowired
 	private StartCommand startCommand;

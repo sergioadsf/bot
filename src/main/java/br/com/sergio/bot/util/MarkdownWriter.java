@@ -29,7 +29,7 @@ public class MarkdownWriter {
 		return this;
 	}
 
-	public MarkdownWriter graus(Object text) {
+	public MarkdownWriter degrees(Object text) {
 		return append(text).append(" ºC");
 	}
 
@@ -84,8 +84,17 @@ public class MarkdownWriter {
 		return append("[").append(title).append("](").append(url).append(")");
 	}
 
+	public MarkdownWriter useName() {
+		return bold(name);
+	}
+
 	public MarkdownWriter name(String name) {
 		this.name = name;
+		return this;
+	}
+	
+	public MarkdownWriter name(String name, String lastName) {
+		this.name = String.format("%s %s", name, lastName);
 		return this;
 	}
 

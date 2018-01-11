@@ -5,10 +5,7 @@ import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
-import org.telegram.telegrambots.api.objects.Chat;
 import org.telegram.telegrambots.api.objects.Location;
-import org.telegram.telegrambots.api.objects.Message;
-import org.telegram.telegrambots.api.objects.User;
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
@@ -19,6 +16,7 @@ import br.com.sergio.bot.model.weather.Weather;
 import br.com.sergio.bot.service.impl.AbsService;
 import br.com.sergio.bot.service.weather.IBotWeatherService;
 import br.com.sergio.bot.service.weather.IWeatherService;
+import br.com.sergio.bot.util.ConverterEmojiWeather;
 import br.com.sergio.bot.util.EmojiUtil;
 import br.com.sergio.bot.util.MarkdownWriter;
 
@@ -29,38 +27,33 @@ public class BotWeatherService extends AbsService implements IBotWeatherService 
 	private IWeatherService wService;
 
 	@Override
-	public void findCurrent(AbsSender absSender, Message message) {
-		String cidade = this.getCity(message.getText());
+	public void findCurrent(AbsSender absSender, MarkdownWriter msg, String text) {
+		String cidade = this.getCity(text);
 		try {
 
 			CurrentForecast weather = wService.findCurrent(cidade);
 			
-			sendDefaultMessage(absSender, message, weather);
+			sendDefaultMessage(absSender, msg, weather);
 		} catch (NotFoundException e) {
-			sendErrorMessage(absSender, message);
+			sendErrorMessage(absSender, msg);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
 	@Override
-	public void findCurrent(AbsSender absSender, Message message, Location location) throws Exception {
+	public void findCurrent(AbsSender absSender, MarkdownWriter msg, Location location) throws Exception {
 		CurrentForecast weather = wService.findCurrent(location.getLatitude(), location.getLongitude());
-		sendDefaultMessage(absSender, message, weather);
+		sendDefaultMessage(absSender, msg, weather);
 	}
 
-	private void sendErrorMessage(AbsSender absSender, Message message) {
-		final User user = message.getFrom();
-		final Chat chat = message.getChat();
-		String userName = user.getFirstName() + " " + user.getLastName();
-		MarkdownWriter msg = MarkdownWriter.start().bold(userName).newLine();
-		Long chatId = chat.getId();
+	private void sendErrorMessage(AbsSender absSender, MarkdownWriter msg) {
 		
 		msg.emoji(EmojiUtil.DISAPPOINTED_FACE).newLine();
 		msg.append("Infelizmente ainda não conheço essa cidade!").newLine();
 
 		SendMessage answer = new SendMessage();
-		answer.setChatId(chatId.toString());
+		answer.setChatId(msg.getChatId());
 		answer.setText(msg.get());
 		answer.enableMarkdown(true);
 		try {
@@ -70,26 +63,22 @@ public class BotWeatherService extends AbsService implements IBotWeatherService 
 		}
 	}
 
-	private void sendDefaultMessage(AbsSender absSender, Message message, CurrentForecast weather)
+	private void sendDefaultMessage(AbsSender absSender, MarkdownWriter msg, CurrentForecast weather)
 			throws TelegramApiException {
-		final User user = message.getFrom();
-		final Chat chat = message.getChat();
-		String userName = user.getFirstName() + " " + user.getLastName();
-		MarkdownWriter msg = MarkdownWriter.start().bold(userName).newLine();
-		Long chatId = chat.getId();
 		
 		Weather w = weather.getWeather().get(0);
 		Main main = weather.getMain();
 
-		msg.append("o clima em ").bold(weather.getName()).append(" nesse momento esta: ").newLine();
+		msg.newLine().append("Clima em ").bold(weather.getName()).append(":").newLine();
 		msg.capitalize(w.getDescription()).newLine();
-		msg.emoji(EmojiUtil.SNOWFLAKE).append("Minima:").graus(main.getMinTemperature()).newLine();
-		msg.emoji(EmojiUtil.FIRE).append("Maxima: ").graus(main.getMaxTemperature()).newLine();
+		msg.emoji(ConverterEmojiWeather.get(w.getIcon())).append("Atual:").degrees(main.getTemperature()).newLine();
+		msg.emoji(EmojiUtil.SNOWFLAKE).append("Minima:").degrees(main.getMinTemperature()).newLine();
+		msg.emoji(EmojiUtil.FIRE).append("Maxima: ").degrees(main.getMaxTemperature()).newLine();
 		msg.emoji(EmojiUtil.SPLASHING_SWEAT_SYMBOL).append("Umidade: ").porcentagem(main.getHumidity()).newLine();
-		msg.image("http://openweathermap.org/img/w/" + w.getIcon() + ".png");
+//		msg.image("http://openweathermap.org/img/w/" + w.getIcon() + ".png");
 
 		SendMessage answer = new SendMessage();
-		answer.setChatId(chatId);
+		answer.setChatId(msg.getChatId());
 		answer.setText(msg.get());
 
 		answer.enableMarkdown(true);

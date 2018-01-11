@@ -10,6 +10,7 @@ import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.logging.BotLogger;
 
+import br.com.sergio.bot.action.AbsAction;
 import br.com.sergio.bot.model.football.TipoCampeonato;
 import br.com.sergio.bot.util.KeyboardUtil;
 import br.com.sergio.bot.util.MarkdownWriter;
@@ -19,7 +20,7 @@ public class ResultCommand implements AbsBotCommand {
 
 	public static final String LOGTAG = "RESULTCOMMAND";
 
-	public void execute(AbsSender absSender, Message message) {
+	public AbsAction execute(AbsSender absSender, Message message) {
 		User user = message.getFrom();
 		Chat chat = message.getChat();
 		
@@ -42,6 +43,8 @@ public class ResultCommand implements AbsBotCommand {
 		} catch (TelegramApiException e) {
 			BotLogger.error(LOGTAG, e);
 		}
+		
+		return null;
 
 	}
 

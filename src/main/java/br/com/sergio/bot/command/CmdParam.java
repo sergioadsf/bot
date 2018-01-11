@@ -6,5 +6,6 @@ public final class CmdParam {
 	final static String RESULT_CMD = "/resultado";
 	final static String ANALYZE_CMD = "/analyze";
 	final static String LOCATION_CMD = "/location";
+	final static String CLASSIFICATION_CMD = "/classification";
 	final static String CANCEL_CMD = "Cancelar";
 }

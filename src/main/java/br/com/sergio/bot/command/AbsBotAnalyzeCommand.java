@@ -9,6 +9,7 @@ import org.telegram.telegrambots.api.objects.User;
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
+import br.com.sergio.bot.action.AbsAction;
 import br.com.sergio.bot.exception.AnswerException;
 import br.com.sergio.bot.model.ParamCMD;
 import br.com.sergio.bot.util.EmojiUtil;
@@ -16,7 +17,7 @@ import br.com.sergio.bot.util.MarkdownWriter;
 
 public abstract class AbsBotAnalyzeCommand implements AbsBotCommand {
 
-	public void execute(AbsSender absSender, BotApiObject botObj) throws Exception {
+	public AbsAction execute(AbsSender absSender, BotApiObject botObj) throws Exception {
 		Message message = null;
 		boolean isCallback = true;
 		String text = null;
@@ -44,18 +45,18 @@ public abstract class AbsBotAnalyzeCommand implements AbsBotCommand {
 			ParamCMD paramCMD = AbsCommand.next.get(user.getId());
 			AbsBotAnalyzeCommand absBotAnalyzeCommand = (AbsBotAnalyzeCommand) paramCMD.getCmd();
 			if (isCallback) {
-				absBotAnalyzeCommand.executeCallback(absSender, message, user, msg, text);
+				absBotAnalyzeCommand.executeCallback(absSender, user, msg, text);
 			} else {
-				absBotAnalyzeCommand.executeMessage(absSender, message, msg, text);
+				absBotAnalyzeCommand.executeMessage(absSender, msg, text);
 			}
-			return;
+			return null;
 		}
 
 		try {
 			if (isCallback) {
-				executeCallback(absSender, message, user, msg, text);
+				executeCallback(absSender, user, msg, text);
 			} else {
-				executeMessage(absSender, message, msg, text);
+				executeMessage(absSender, msg, text);
 			}
 		} catch (AnswerException e) {
 
@@ -66,6 +67,8 @@ public abstract class AbsBotAnalyzeCommand implements AbsBotCommand {
 			answer = errorMessage(msg.getChatId(), e1);
 			send(absSender, answer);
 		}
+		
+		return null;
 
 	}
 
@@ -77,10 +80,10 @@ public abstract class AbsBotAnalyzeCommand implements AbsBotCommand {
 		}
 	}
 
-	abstract void executeCallback(AbsSender absSender, Message message, User user, MarkdownWriter msg, String text)
+	abstract void executeCallback(AbsSender absSender, User user, MarkdownWriter msg, String text)
 			throws AnswerException, Exception;
 
-	abstract void executeMessage(AbsSender absSender, Message message, MarkdownWriter msg, String text)
+	abstract void executeMessage(AbsSender absSender, MarkdownWriter msg, String text)
 			throws AnswerException, Exception;
 
 	public SendMessage errorMessage(Long chatId, Exception e1) {

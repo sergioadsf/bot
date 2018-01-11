@@ -136,6 +136,10 @@ public enum EmojiUtil {
     SUN_WITH_FACE('\uD83C', '\uDF1E'),
     FOGGY('\uD83C', '\uDF01'),
     CLOUD(null, '\u2601'),
+    CLOUD_RAIN("U+1F327"),
+    THUNDERSTORM("U+26C8"),
+    MOON("U+1F311"),
+	BLACK_SUN_WITH_RAYS(null, '\u2600'),
 
     // Others
     LEFT_RIGHT_ARROW(null, '\u2194'),
@@ -173,6 +177,14 @@ public enum EmojiUtil {
 
     Character firstChar;
     Character secondChar;
+    
+//    BLACK_SUN_WITH_RAYS("	U+1F577"),
+    EmojiUtil(String value) {
+    	char[] arrChar = Character.toChars(Integer.parseInt(value.substring(2),16));
+        this.firstChar = arrChar[0];
+        if(arrChar.length == 2)
+        	this.secondChar = arrChar[1];
+    }
 
     EmojiUtil(Character firstChar, Character secondChar) {
         this.firstChar = firstChar;
