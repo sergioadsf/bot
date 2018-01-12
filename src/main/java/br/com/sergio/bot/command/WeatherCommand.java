@@ -13,15 +13,16 @@ import org.telegram.telegrambots.logging.BotLogger;
 
 import br.com.sergio.bot.action.AbsAction;
 import br.com.sergio.bot.action.football.CompetitionAction;
+import br.com.sergio.bot.action.weather.WeatherAction;
 import br.com.sergio.bot.model.football.TipoCampeonato;
 import br.com.sergio.bot.util.KeyboardUtil;
 import br.com.sergio.bot.util.MarkdownWriter;
 
 @Component
-public class ResultCommand extends AbsBotCommand {
+public class WeatherCommand extends AbsBotCommand {
 	
 	@Autowired
-	private CompetitionAction competitionAction; 
+	private WeatherAction weatherAction; 
 
 	public static final String LOGTAG = "RESULTCOMMAND";
 
@@ -29,18 +30,14 @@ public class ResultCommand extends AbsBotCommand {
 		User user = message.getFrom();
 		Chat chat = message.getChat();
 		
-		MarkdownWriter msg = MarkdownWriter.start();
+		MarkdownWriter msg = MarkdownWriter.start(chat.getId()).userId(user.getId()).name(user.getFirstName(), user.getLastName());
 
-		String userName = user.getFirstName() + " " + user.getLastName();
-
-		msg.append("Bem vindo, ").bold(userName).newLine();
-		msg.append("Sobre qual campeonato você gostaria de saber?");
+//		msg.append("Bem vindo, ").useName().newLine();
+		msg.append("Agora me diga a cidade?");
 
 		SendMessage answer = new SendMessage();
-		answer.setChatId(chat.getId().toString());
+		answer.setChatId(msg.getChatId());
 		answer.setText(msg.get());
-		ReplyKeyboard replyMarkup = KeyboardUtil.getListInlineKeyboard(message.getFrom().getId(), "pt", TipoCampeonato.names());
-		answer.setReplyMarkup(replyMarkup);
 		answer.enableMarkdown(true);
 
 		try {
@@ -50,7 +47,7 @@ public class ResultCommand extends AbsBotCommand {
 			return null;
 		}
 		
-		return competitionAction;
+		return weatherAction;
 
 	}
 

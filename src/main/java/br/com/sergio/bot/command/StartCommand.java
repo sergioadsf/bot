@@ -20,7 +20,7 @@ import br.com.sergio.bot.action.AbsAction;
 import br.com.sergio.bot.util.MarkdownWriter;
 
 @Component
-public class StartCommand implements AbsBotCommand {
+public class StartCommand extends AbsBotCommand {
 
 	public static final String LOGTAG = "STARTCOMMAND";
 

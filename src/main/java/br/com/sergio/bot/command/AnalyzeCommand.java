@@ -51,11 +51,11 @@ public class AnalyzeCommand extends AbsBotAnalyzeCommand {
 			return;
 		}
 
-		if (isCancel(text)) {
-			cancelMessage(absSender, msg);
-			AbsCommand.next.remove(msg.getUserId());
-			return;
-		}
+//		if (isCancel(text)) {
+//			cancelMessage(absSender, msg);
+//			AbsCommand.next.remove(msg.getUserId());
+//			return;
+//		}
 
 		throw new AnswerException("");
 	}

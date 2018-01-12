@@ -10,7 +10,7 @@ public abstract class AbsFootballAction extends AbsAction {
 	@Autowired
 	private IBotFootballService iBotFootballService;
 
-	public IBotFootballService getiBotFootballService() {
+	public IBotFootballService getIBotFootballService() {
 		return iBotFootballService;
 	}
 

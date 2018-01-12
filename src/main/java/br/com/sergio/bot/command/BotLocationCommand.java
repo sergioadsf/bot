@@ -6,7 +6,7 @@ import org.telegram.telegrambots.bots.AbsSender;
 
 import br.com.sergio.bot.action.AbsAction;
 
-public abstract class BotLocationCommand implements AbsBotCommand {
+public abstract class BotLocationCommand extends AbsBotCommand {
 
 	@Override
 	public AbsAction execute(AbsSender absSender, Message message) throws Exception {

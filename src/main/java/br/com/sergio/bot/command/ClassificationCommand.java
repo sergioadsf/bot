@@ -18,7 +18,7 @@ import br.com.sergio.bot.util.KeyboardUtil;
 import br.com.sergio.bot.util.MarkdownWriter;
 
 @Component
-public class ResultCommand extends AbsBotCommand {
+public class ClassificationCommand extends AbsBotCommand {
 	
 	@Autowired
 	private CompetitionAction competitionAction; 

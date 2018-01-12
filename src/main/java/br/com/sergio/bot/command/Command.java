@@ -5,7 +5,8 @@ import org.telegram.telegrambots.api.interfaces.BotApiObject;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.AbsSender;
 
-import br.com.sergio.bot.model.ParamAction;
+import br.com.sergio.bot.action.AbsAction;
+import br.com.sergio.bot.model.ParamCMD;
 
 @Component
 public class Command extends AbsCommand {
@@ -15,11 +16,43 @@ public class Command extends AbsCommand {
 		try {
 			BotApiObject message = getMessage(update);
 			String text = getCommandText(update);
-			nextAction.put(getUserId(update), new ParamAction(this.getCommand(text).execute(sender, message)));
-
+			Integer userId = getUserId(update);
+			AbsAction absActionNext = null;
+			if (isCommand(text)) {
+				next.put(userId, new ParamCMD<Object>(CmdParam.param(text)));
+				absActionNext = this.getCommand(text).execute(sender, message);
+				executeAction(userId, absActionNext);
+			} else {
+				AbsAction absAction = nextAction.get(userId);
+				if (absAction != null) {
+					absActionNext = absAction.execute(sender, message);
+					executeAction(userId, absActionNext);
+				} else {
+					//MSG UNKNOWN
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+
+	private void executeAction(Integer userId, AbsAction absActionNext) {
+		if (absActionNext == null) {
+			removeUser(userId);
+		} else {
+			nextAction.put(userId, absActionNext);
+		}
+	}
+
+
+	private void removeUser(Integer userId) {
+		next.remove(userId);
+		nextAction.remove(userId);
+	}
+
+	public static boolean isCommand(String text) {
+		return text.matches("/[a-z]{1,32}.*");
 	}
 
 	private BotApiObject getMessage(final Update update) {

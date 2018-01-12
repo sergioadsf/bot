@@ -17,6 +17,7 @@ import br.com.sergio.bot.exception.NotFoundException;
 import br.com.sergio.bot.model.football.FootSearch;
 import br.com.sergio.bot.model.football.Match;
 import br.com.sergio.bot.model.football.Team;
+import br.com.sergio.bot.model.football.TeamPosition;
 import br.com.sergio.bot.model.football.TipoRodada;
 import br.com.sergio.bot.service.football.IBotFootballService;
 import br.com.sergio.bot.service.football.IFootballService;
@@ -34,22 +35,58 @@ public class BotFootballService extends AbsService implements IBotFootballServic
 	@Override
 	public void findRound(AbsSender absSender, MarkdownWriter msg, FootSearch footSearch) throws Exception {
 		try {
-			// TODO: back to improve this validation
 			List<Match> listMatch = wService.findRound(footSearch);
-			sendDefaultMessage(absSender, msg, listMatch);
+			sendRoundMessage(absSender, msg, listMatch);
 
 		} catch (NotFoundException e) {
 			sendErrorMessage(absSender, msg);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public void findClassification(AbsSender absSender, MarkdownWriter msg, int tipoCampeonato) {
+		try {
+			List<TeamPosition> listPosition = wService.findClassification(tipoCampeonato);
+			sendClassificationMessage(absSender, msg, listPosition);
 
+		} catch (NotFoundException e) {
+			sendErrorMessage(absSender, msg);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void sendClassificationMessage(AbsSender absSender, MarkdownWriter msg, List<TeamPosition> listPosition) {
+		msg.newLine();
+		String newGroup = "";
+		for (TeamPosition position : listPosition) {
+			String group = position.getGroup();
+			if(!newGroup.equals(group)) {
+				newGroup = group;
+				msg.newLine();
+				msg.bold(newGroup).newLine();
+			}
+			msg.append(position.getName()).newLine().append("");
+		}
+
+		msg.newLine();
+		SendMessage answer = new SendMessage();
+		answer.setChatId(msg.getChatId());
+		answer.setText(msg.get());
+		answer.enableMarkdown(true);
+		try {
+			absSender.sendMessage(answer);
+		} catch (TelegramApiException ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	@Override
 	public void askRound(AbsSender absSender, MarkdownWriter msg) {
 
-		msg.append("Informe a rodada desejada do campeonato! Selecione abaixo ou digite o numero da mesma.").newLine();
+		msg.newLine().append("Informe a rodada desejada do campeonato! Selecione abaixo ou digite o numero da mesma.").newLine();
 
 		ReplyKeyboard replyMarkup = new InlineKeyboardMarkup();
 		replyMarkup = KeyboardUtil.getListInlineKeyboard(msg.getUserId(), "pt", TipoRodada.names());
@@ -83,7 +120,7 @@ public class BotFootballService extends AbsService implements IBotFootballServic
 		}
 	}
 
-	private void sendDefaultMessage(AbsSender absSender, MarkdownWriter msg, List<Match> listMatch)
+	private void sendRoundMessage(AbsSender absSender, MarkdownWriter msg, List<Match> listMatch)
 			throws TelegramApiException {
 
 		String dateStr = "";
@@ -95,7 +132,7 @@ public class BotFootballService extends AbsService implements IBotFootballServic
 				if (!"".equals(dateStr)) {
 					msg.newLine();
 				} else {
-					msg.bold("Rodada nº: ").append(match.getRound()).newLine();
+					msg.newLine().bold("Rodada nº: ").append(match.getRound()).newLine();
 				}
 
 				dateStr = dateMatch;

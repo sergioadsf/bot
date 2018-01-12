@@ -74,7 +74,7 @@ public class KeyboardUtil {
 		return replyKeyboardMarkup;
 	}
 
-	public static String getCancelCommand(String language) {
+	private static String getCancelCommand(String language) {
 		return String.format("%s Cancelar", EmojiUtil.CROSS_MARK.toString());// String.format(LocalisationUtil.getString("cancel",
 																			// language),
 																			// EmojiUtil.CROSS_MARK.toString());

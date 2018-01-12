@@ -15,7 +15,7 @@ import br.com.sergio.bot.model.ParamCMD;
 import br.com.sergio.bot.util.EmojiUtil;
 import br.com.sergio.bot.util.MarkdownWriter;
 
-public abstract class AbsBotAnalyzeCommand implements AbsBotCommand {
+public abstract class AbsBotAnalyzeCommand extends AbsBotCommand {
 
 	public AbsAction execute(AbsSender absSender, BotApiObject botObj) throws Exception {
 		Message message = null;

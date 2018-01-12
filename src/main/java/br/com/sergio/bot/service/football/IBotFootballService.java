@@ -12,4 +12,6 @@ public interface IBotFootballService extends IService {
 
 	void askRound(AbsSender absSender, MarkdownWriter msg);
 
+	void findClassification(AbsSender absSender, MarkdownWriter msg, int tipoCampeonato);
+
 }

@@ -1,11 +1,32 @@
 package br.com.sergio.bot.command;
 
-public final class CmdParam {
+public enum CmdParam {
 
-	final static String START_CMD = "/start";
-	final static String RESULT_CMD = "/resultado";
-	final static String ANALYZE_CMD = "/analyze";
-	final static String LOCATION_CMD = "/location";
-	final static String CLASSIFICATION_CMD = "/classification";
-	final static String CANCEL_CMD = "Cancelar";
+	START_CMD("/start"), 
+	RESULT_CMD("/resultado"), 
+	ANALYZE_CMD("/analyze"), 
+	LOCATION_CMD("/location"), 
+	WEATHER_CMD("/clima"), 
+	CLASSIFICATION_CMD("/classificacao"), 
+	CANCEL_CMD("Cancelar");
+
+	private String value;
+
+	private CmdParam(String value) {
+		this.value = value;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public static CmdParam param(String value) {
+		for (CmdParam param : values()) {
+			if (value.equals(param.value)) {
+				return param;
+			}
+		}
+		return null;
+	}
+
 }

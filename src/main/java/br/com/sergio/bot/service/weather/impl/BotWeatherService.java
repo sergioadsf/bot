@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Location;
+import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
@@ -18,6 +19,7 @@ import br.com.sergio.bot.service.weather.IBotWeatherService;
 import br.com.sergio.bot.service.weather.IWeatherService;
 import br.com.sergio.bot.util.ConverterEmojiWeather;
 import br.com.sergio.bot.util.EmojiUtil;
+import br.com.sergio.bot.util.KeyboardUtil;
 import br.com.sergio.bot.util.MarkdownWriter;
 
 @Service
@@ -31,7 +33,7 @@ public class BotWeatherService extends AbsService implements IBotWeatherService 
 		String cidade = this.getCity(text);
 		try {
 
-			CurrentForecast weather = wService.findCurrent(cidade);
+			CurrentForecast weather = wService.findCurrent(text);
 			
 			sendDefaultMessage(absSender, msg, weather);
 		} catch (NotFoundException e) {
@@ -71,17 +73,20 @@ public class BotWeatherService extends AbsService implements IBotWeatherService 
 
 		msg.newLine().append("Clima em ").bold(weather.getName()).append(":").newLine();
 		msg.capitalize(w.getDescription()).newLine();
-		msg.emoji(ConverterEmojiWeather.get(w.getIcon())).append("Atual:").degrees(main.getTemperature()).newLine();
-		msg.emoji(EmojiUtil.SNOWFLAKE).append("Minima:").degrees(main.getMinTemperature()).newLine();
+		msg.emoji(ConverterEmojiWeather.get(w.getIcon())).append("Atual: ").degrees(main.getTemperature()).newLine();
+		msg.emoji(EmojiUtil.SNOWFLAKE).append("Minima: ").degrees(main.getMinTemperature()).newLine();
 		msg.emoji(EmojiUtil.FIRE).append("Maxima: ").degrees(main.getMaxTemperature()).newLine();
 		msg.emoji(EmojiUtil.SPLASHING_SWEAT_SYMBOL).append("Umidade: ").porcentagem(main.getHumidity()).newLine();
 //		msg.image("http://openweathermap.org/img/w/" + w.getIcon() + ".png");
+		
+		msg.newLine().append("Gostaria de saber de mais alguma cidade? Se sim me diga o nome que irei lhe informar.");
+		InlineKeyboardMarkup inlineKeyboard = KeyboardUtil.getListInlineKeyboard(msg.getUserId(), "");
 
 		SendMessage answer = new SendMessage();
 		answer.setChatId(msg.getChatId());
 		answer.setText(msg.get());
-
 		answer.enableMarkdown(true);
+		answer.setReplyMarkup(inlineKeyboard);
 		absSender.sendMessage(answer);
 	}
 
@@ -96,9 +101,10 @@ public class BotWeatherService extends AbsService implements IBotWeatherService 
 //				}
 //			}
 //		}
-		String[] texts = text.split(" "); 
+//		String[] texts = text.split(" "); 
 
-		return texts[1];
+//		return texts[1];
+		return text;
 	}
 
 //	private boolean isKeywords(String token) {

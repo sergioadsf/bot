@@ -6,20 +6,19 @@ import org.telegram.telegrambots.api.objects.User;
 import org.telegram.telegrambots.bots.AbsSender;
 
 import br.com.sergio.bot.action.AbsAction;
-import br.com.sergio.bot.model.ParamCMD;
 
-public interface AbsBotCommand {
+public abstract class AbsBotCommand {
 
-	default AbsAction execute(AbsSender absSender, BotApiObject botObj) throws Exception {
+	AbsAction execute(AbsSender absSender, BotApiObject botObj) throws Exception {
 		Message message = (Message) botObj;
 		User user = message.getFrom();
-		if (AbsCommand.next.containsKey(user.getId())) {
-			ParamCMD paramCMD = AbsCommand.next.get(user.getId());
-			return paramCMD.getCmd().execute(absSender, message);
-		}
+//		if (AbsCommand.next.containsKey(user.getId())) {
+//			ParamCMD paramCMD = AbsCommand.next.get(user.getId());
+//			return paramCMD.getCmd().execute(absSender, message);
+//		}
 		return execute(absSender, message);
 	}
 
-	AbsAction execute(AbsSender absSender, Message message) throws Exception;
+	abstract AbsAction execute(AbsSender absSender, Message message) throws Exception;
 
 }
