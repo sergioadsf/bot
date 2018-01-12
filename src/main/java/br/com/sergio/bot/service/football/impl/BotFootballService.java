@@ -25,6 +25,7 @@ import br.com.sergio.bot.service.impl.AbsService;
 import br.com.sergio.bot.util.EmojiUtil;
 import br.com.sergio.bot.util.KeyboardUtil;
 import br.com.sergio.bot.util.MarkdownWriter;
+import br.com.sergio.bot.util.StringUtil;
 
 @Service
 public class BotFootballService extends AbsService implements IBotFootballService {
@@ -65,13 +66,11 @@ public class BotFootballService extends AbsService implements IBotFootballServic
 			String group = position.getGroup();
 			if(!newGroup.equals(group)) {
 				newGroup = group;
-				msg.newLine();
-				msg.bold(newGroup).newLine();
+				buildHeader(msg, newGroup);
 			}
-			msg.append(position.getName()).newLine().append("");
+			buildBody(msg, position);
 		}
 
-		msg.newLine();
 		SendMessage answer = new SendMessage();
 		answer.setChatId(msg.getChatId());
 		answer.setText(msg.get());
@@ -81,6 +80,31 @@ public class BotFootballService extends AbsService implements IBotFootballServic
 		} catch (TelegramApiException ex) {
 			ex.printStackTrace();
 		}
+	}
+
+	private void buildBody(MarkdownWriter msg, TeamPosition position) {
+		msg.append(StringUtil.alinhaE(position.getAlias(), 10));
+		msg.append(StringUtil.alinhaD(position.getMatches(), 4));
+		msg.append(StringUtil.alinhaD(position.getWins(), 4));
+		msg.append(StringUtil.alinhaD(position.getLoses(), 4));
+		msg.append(StringUtil.alinhaD(position.getDraws(), 4));
+		msg.append(StringUtil.alinhaD(position.getScoresPro(), 5));
+		msg.append(StringUtil.alinhaD(position.getScoresAgainst(), 5));
+		msg.append(StringUtil.alinhaD(position.getBalance(), 5));
+		msg.newLine();
+	}
+
+	private void buildHeader(MarkdownWriter msg, String newGroup) {
+		msg.newLine();
+		msg.bold(StringUtil.alinhaE(newGroup, 10));
+		msg.append(StringUtil.alinhaE("J", 4));
+		msg.append(StringUtil.alinhaE("V", 4));
+		msg.append(StringUtil.alinhaE("D", 4));
+		msg.append(StringUtil.alinhaE("E", 4));
+		msg.append(StringUtil.alinhaE("GP", 5));
+		msg.append(StringUtil.alinhaE("GC", 5));
+		msg.append(StringUtil.alinhaE("SG", 5));
+		msg.newLine();
 	}
 
 	@Override
