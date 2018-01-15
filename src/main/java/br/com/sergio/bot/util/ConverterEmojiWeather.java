@@ -13,6 +13,7 @@ public class ConverterEmojiWeather {
 		add("02d", EmojiUtil.SUN_BEHIND_CLOUD);
 		add("02n", EmojiUtil.CLOUD);
 		add("03d", EmojiUtil.CLOUD);
+		add("03n", EmojiUtil.CLOUD);
 		add("04d", EmojiUtil.CLOUD);
 		add("04n", EmojiUtil.CLOUD);
 		add("09d", EmojiUtil.CLOUD_RAIN);

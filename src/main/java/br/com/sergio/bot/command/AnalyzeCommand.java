@@ -35,21 +35,6 @@ public class AnalyzeCommand extends AbsBotAnalyzeCommand {
 	void executeCallback(AbsSender absSender, User user, MarkdownWriter msg, String text)
 			throws AnswerException, Exception {
 
-		TipoCampeonato tipoCampeonato = isResult(text);
-		if (tipoCampeonato != null) {
-			AbsCommand.next.put(user.getId(), new ParamCMD<Object>(this, new FootSearch(tipoCampeonato.getValue())));
-			iBotFootballService.askRound(absSender, msg);
-			return;
-		}
-
-		TipoRodada tipoRodada = isRound(text);
-		if (tipoRodada != null && AbsCommand.next.containsKey(user.getId())) {
-			ParamCMD paramCMD = AbsCommand.next.get(user.getId());
-			FootSearch footSearch = (FootSearch) paramCMD.getParam();
-			footSearch.setRound(tipoRodada.getValue());
-			iBotFootballService.findRound(absSender, msg, footSearch);
-			return;
-		}
 
 //		if (isCancel(text)) {
 //			cancelMessage(absSender, msg);

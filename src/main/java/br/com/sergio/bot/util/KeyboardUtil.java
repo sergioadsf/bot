@@ -69,7 +69,6 @@ public class KeyboardUtil {
 
 		replyKeyboardMarkup = new InlineKeyboardMarkup();
 		replyKeyboardMarkup.setKeyboard(listButtons);
-		// replyKeyboardMarkup.setOneTimeKeyboard(true);
 
 		return replyKeyboardMarkup;
 	}

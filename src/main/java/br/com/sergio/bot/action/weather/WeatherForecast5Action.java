@@ -8,17 +8,11 @@ import br.com.sergio.bot.exception.AnswerException;
 import br.com.sergio.bot.util.MarkdownWriter;
 
 @Component
-public class WeatherAction extends AbsWeatherAction {
-
-	private static final String ATUAL = "atual";
-	
+public class WeatherForecast5Action extends AbsWeatherAction {
 
 	public AbsAction action(AbsSender absSender, MarkdownWriter msg, String text) throws AnswerException, Exception {
-		askCity(absSender, msg);
-		if (text.toLowerCase().equals(ATUAL)) {
-			return this.getCurrentAction();
-		}
-		
-		return this.getForecast5Action();
+		getIBotWeatherService().forecast5Days(absSender, msg, text);
+
+		return this;
 	}
 }

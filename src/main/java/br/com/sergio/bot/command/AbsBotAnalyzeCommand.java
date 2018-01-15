@@ -41,16 +41,16 @@ public abstract class AbsBotAnalyzeCommand extends AbsBotCommand {
 		MarkdownWriter msg = MarkdownWriter.start(chat.getId()).bold(userName).newLine();
 		msg.userId(user.getId());
 
-		if (AbsCommand.next.containsKey(user.getId())) {
-			ParamCMD paramCMD = AbsCommand.next.get(user.getId());
-			AbsBotAnalyzeCommand absBotAnalyzeCommand = (AbsBotAnalyzeCommand) paramCMD.getCmd();
-			if (isCallback) {
-				absBotAnalyzeCommand.executeCallback(absSender, user, msg, text);
-			} else {
-				absBotAnalyzeCommand.executeMessage(absSender, msg, text);
-			}
-			return null;
-		}
+//		if (AbsCommand.next.containsKey(user.getId())) {
+//			ParamCMD paramCMD = AbsCommand.next.get(user.getId());
+//			AbsBotAnalyzeCommand absBotAnalyzeCommand = (AbsBotAnalyzeCommand) paramCMD.getCmd();
+//			if (isCallback) {
+//				absBotAnalyzeCommand.executeCallback(absSender, user, msg, text);
+//			} else {
+//				absBotAnalyzeCommand.executeMessage(absSender, msg, text);
+//			}
+//			return null;
+//		}
 
 		try {
 			if (isCallback) {

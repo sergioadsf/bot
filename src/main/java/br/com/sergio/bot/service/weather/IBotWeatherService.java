@@ -11,4 +11,8 @@ public interface IBotWeatherService extends IService {
 	void findCurrent(AbsSender absSender, MarkdownWriter msg, String text) throws Exception;
 
 	void findCurrent(AbsSender absSender, MarkdownWriter msg, Location location) throws Exception;
+	
+	void forecast5Days(AbsSender absSender, MarkdownWriter msg, String text) throws Exception;
+
+	void askCity(AbsSender absSender, MarkdownWriter msg);
 }
