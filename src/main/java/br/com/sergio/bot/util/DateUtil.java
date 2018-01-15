@@ -33,19 +33,22 @@ public class DateUtil {
 	public static final Date dateWithoutTime(Date data) {
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.setTime(data);
+		setZero(gc);
+
+		return gc.getTime();
+	}
+
+	private static void setZero(GregorianCalendar gc) {
 		gc.set(Calendar.SECOND, 0);
 		gc.set(Calendar.MINUTE, 0);
 		gc.set(Calendar.HOUR_OF_DAY, 0);
-
-		return gc.getTime();
+		gc.set(Calendar.MILLISECOND, 0);
 	}
 
 	public static final Date dateWithoutTime(Long timestamp) {
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.setTimeInMillis(timestamp * 1000);
-		gc.set(Calendar.SECOND, 0);
-		gc.set(Calendar.MINUTE, 0);
-		gc.set(Calendar.HOUR_OF_DAY, 0);
+		setZero(gc);
 
 		return gc.getTime();
 	}

@@ -104,7 +104,7 @@ public class BotWeatherService extends AbsService implements IBotWeatherService 
 			data = anotherDate;
 			Main main = detail.getMain();
 			Weather w = detail.getWeather().get(0);
-			msg.capitalize(w.getDescription()).append(detail.getDateStr()).newLine();
+			msg.capitalize(w.getDescription()).newLine();
 			msg.emoji(ConverterEmojiWeather.get(w.getIcon())).append("Atual: ").degrees(main.getTemperature())
 					.newLine();
 			msg.emoji(EmojiUtil.SNOWFLAKE).append("Minima: ").degrees(main.getMinTemperature()).newLine();
