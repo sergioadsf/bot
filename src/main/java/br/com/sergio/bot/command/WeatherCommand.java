@@ -31,7 +31,6 @@ public class WeatherCommand extends AbsBotCommand {
 		Integer userId = user.getId();
 		MarkdownWriter msg = MarkdownWriter.start(chatId).userId(userId).name(user.getFirstName(), user.getLastName());
 
-		// msg.append("Bem vindo, ").useName().newLine();
 		msg.append("Obter clima atual? Ou gostaria de uma previsão para os próximos dias?");
 
 		SendMessage answer = new SendMessage();

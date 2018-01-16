@@ -15,6 +15,12 @@ public class FootSearch implements DTO {
 	@JsonProperty("campeonato")
 	private Integer competition;
 
+	@JsonProperty("grupo")
+	private String group;
+
+	@JsonProperty("time")
+	private String team;
+
 	public FootSearch() {
 	}
 
@@ -43,6 +49,22 @@ public class FootSearch implements DTO {
 
 	public void setCompetition(Integer competition) {
 		this.competition = competition;
+	}
+
+	public String getGroup() {
+		return group;
+	}
+
+	public void setGroup(String group) {
+		this.group = group;
+	}
+
+	public String getTeam() {
+		return team;
+	}
+
+	public void setTeam(String team) {
+		this.team = team;
 	}
 
 }

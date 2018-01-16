@@ -12,6 +12,9 @@ public class Wind implements DTO {
 
 	@JsonProperty("deg")
 	private Double degrees;
+	
+	@JsonProperty("gust")
+	private Double gust;
 
 	public Wind() {
 	}

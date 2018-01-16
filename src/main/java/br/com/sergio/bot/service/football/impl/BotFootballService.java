@@ -45,11 +45,37 @@ public class BotFootballService extends AbsService implements IBotFootballServic
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
-	public void findClassification(AbsSender absSender, MarkdownWriter msg, int tipoCampeonato) {
+	public void findClassification(AbsSender absSender, MarkdownWriter msg, int competition) {
 		try {
-			List<TeamPosition> listPosition = wService.findClassification(tipoCampeonato);
+			List<TeamPosition> listPosition = wService.findClassification(competition);
+			sendClassificationMessage(absSender, msg, listPosition);
+
+		} catch (NotFoundException e) {
+			sendErrorMessage(absSender, msg);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void findGroup(AbsSender absSender, MarkdownWriter msg, FootSearch footSearch) {
+		try {
+			List<TeamPosition> listPosition = wService.findGroup(footSearch);
+			sendClassificationMessage(absSender, msg, listPosition);
+
+		} catch (NotFoundException e) {
+			sendErrorMessage(absSender, msg);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void findTeam(AbsSender absSender, MarkdownWriter msg, FootSearch footSearch) {
+		try {
+			List<TeamPosition> listPosition = wService.findTeam(footSearch);
 			sendClassificationMessage(absSender, msg, listPosition);
 
 		} catch (NotFoundException e) {
@@ -64,7 +90,7 @@ public class BotFootballService extends AbsService implements IBotFootballServic
 		String newGroup = "";
 		for (TeamPosition position : listPosition) {
 			String group = position.getGroup();
-			if(!newGroup.equals(group)) {
+			if (!newGroup.equals(group)) {
 				newGroup = group;
 				buildHeader(msg, newGroup);
 			}
@@ -110,7 +136,8 @@ public class BotFootballService extends AbsService implements IBotFootballServic
 	@Override
 	public void askRound(AbsSender absSender, MarkdownWriter msg) {
 
-		msg.newLine().append("Informe a rodada desejada do campeonato! Selecione abaixo ou digite o numero da mesma.").newLine();
+		msg.newLine().append("Informe a rodada desejada do campeonato! Selecione abaixo ou digite o numero da mesma.")
+				.newLine();
 
 		ReplyKeyboard replyMarkup = new InlineKeyboardMarkup();
 		replyMarkup = KeyboardUtil.getListInlineKeyboard(msg.getUserId(), "pt", TipoRodada.names());
@@ -126,6 +153,28 @@ public class BotFootballService extends AbsService implements IBotFootballServic
 		} catch (TelegramApiException ex) {
 			ex.printStackTrace();
 		}
+	}
+
+	@Override
+	public void askGroup(AbsSender absSender, MarkdownWriter msg, int value) {
+		msg.newLine().append("Gostaria de consultar por time ou grupo especifico? Caso não, selecione 'Todos' abaixo.")
+				.newLine();
+
+		ReplyKeyboard replyMarkup = new InlineKeyboardMarkup();
+		replyMarkup = KeyboardUtil.getListInlineKeyboard(msg.getUserId(), "pt", "Time", "Grupo", "Todos");
+
+		SendMessage answer = new SendMessage();
+		answer.setReplyMarkup(replyMarkup);
+		answer.setChatId(msg.getChatId());
+		answer.setText(msg.get());
+		answer.enableMarkdown(true);
+		try {
+			absSender.sendMessage(answer);
+
+		} catch (TelegramApiException ex) {
+			ex.printStackTrace();
+		}
+
 	}
 
 	private void sendErrorMessage(AbsSender absSender, MarkdownWriter msg) {

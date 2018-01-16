@@ -15,9 +15,18 @@ import br.com.sergio.bot.util.MarkdownWriter;
 
 @Component
 public class CompetitionAction extends AbsFootballAction {
-	
+
 	@Autowired
 	private RoundAction roundAction;
+
+	@Autowired
+	private AllConsultAction allConsultAction;
+
+	@Autowired
+	private GroupConsultAction groupConsultAction;
+
+	@Autowired
+	private TeamConsultAction teamConsultAction;
 
 	@SuppressWarnings("unchecked")
 	public AbsAction action(AbsSender absSender, MarkdownWriter msg, String text) throws AnswerException, Exception {
@@ -25,13 +34,34 @@ public class CompetitionAction extends AbsFootballAction {
 		TipoCampeonato tipoCampeonato = isResult(text);
 		ParamCMD<FootSearch> param = AbsCommand.next.get(userId);
 		if (param.getCmdParam() == CmdParam.RESULT_CMD) {
-			param.setParam(new FootSearch(tipoCampeonato.getValue()));
+			putParam(tipoCampeonato, param);
 			getIBotFootballService().askRound(absSender, msg);
 			return roundAction;
 		} else {
-			getIBotFootballService().findClassification(absSender, msg, tipoCampeonato.getValue());
-			return this;
+			return redirect(absSender, msg, param, tipoCampeonato, text);
+			// getIBotFootballService().findClassification(absSender, msg,
+			// tipoCampeonato.getValue());
+			// getIBotFootballService().askGroup(absSender, msg, tipoCampeonato.getValue());
+			// return this;
 		}
+	}
+
+	private void putParam(TipoCampeonato tipoCampeonato, ParamCMD<FootSearch> param) {
+		param.setParam(new FootSearch(tipoCampeonato.getValue()));
+	}
+
+	private AbsAction redirect(AbsSender absSender, MarkdownWriter msg, ParamCMD<FootSearch> param, TipoCampeonato tipoCampeonato,
+			String text) throws AnswerException, Exception {
+		if (ALL.equals(text)) {
+			return allConsultAction.action(absSender, msg, text);
+		} else if (GROUP.equals(text)) {
+			return groupConsultAction;
+		} else if (TEAM.equals(text)) {
+			return teamConsultAction;
+		}
+		putParam(tipoCampeonato, param);
+		getIBotFootballService().askGroup(absSender, msg, tipoCampeonato.getValue());
+		return this;
 	}
 
 	private TipoCampeonato isResult(String text) {

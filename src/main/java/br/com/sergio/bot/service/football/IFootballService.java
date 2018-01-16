@@ -11,9 +11,15 @@ public interface IFootballService {
 	final String CALENDAR = "calendario";
 	final String CLASSIFICATION = "classificacao";
 	final String ROUND = "rodada";
+	final String GROUP = "grupo";
+	final String TEAM = "time";
 
 	List<Match> findRound(FootSearch fooatSearch) throws Exception;
 
 	List<TeamPosition> findClassification(int tipoCampeonato) throws Exception;
+
+	List<TeamPosition> findGroup(FootSearch fooatSearch) throws Exception;
+	
+	List<TeamPosition> findTeam(FootSearch fooatSearch) throws Exception;
 
 }

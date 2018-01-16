@@ -91,8 +91,9 @@ public class BotWeatherService extends AbsService implements IBotWeatherService 
 			throws TelegramApiException {
 		City city = forecast.getCity();
 
-		msg.newLine().append("A previsão para ").bold(String.format("%s (%s)", city.getName(), city.getCountry()))
-				.append(" nos próximos dias:").newLine();
+		msg.newLine().append("A previsão para ")
+		.bold(String.format("%s (%s)", city.getName(), city.getCountry()))
+		.append(" nos próximos dias:").newLine();
 
 		Date data = DateUtil.minDateWithoutTime();
 		for (ForecastDetail detail : forecast.getListForecast()) {
@@ -105,7 +106,7 @@ public class BotWeatherService extends AbsService implements IBotWeatherService 
 			Main main = detail.getMain();
 			Weather w = detail.getWeather().get(0);
 			msg.capitalize(w.getDescription()).newLine();
-			msg.emoji(ConverterEmojiWeather.get(w.getIcon())).append("Atual: ").degrees(main.getTemperature())
+			msg.emoji(ConverterEmojiWeather.get(w.getIcon())).append("Previsão: ").degrees(main.getTemperature())
 					.newLine();
 			msg.emoji(EmojiUtil.SNOWFLAKE).append("Minima: ").degrees(main.getMinTemperature()).newLine();
 			msg.emoji(EmojiUtil.FIRE).append("Maxima: ").degrees(main.getMaxTemperature()).newLine();
