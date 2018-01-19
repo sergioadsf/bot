@@ -17,8 +17,14 @@ public abstract class AbsWeatherAction extends AbsAction {
 
 	@Autowired
 	private WeatherForecast5Action forecast5Action;
+
+	@Autowired
+	private WeatherAction weatherAction;
 	
-	
+	protected boolean isBack(String text) {
+		return text.contains("voltar");
+	}
+
 	protected void askCity(AbsSender absSender, MarkdownWriter msg) {
 		getIBotWeatherService().askCity(absSender, msg);
 	}
@@ -33,6 +39,10 @@ public abstract class AbsWeatherAction extends AbsAction {
 
 	protected WeatherForecast5Action getForecast5Action() {
 		return forecast5Action;
+	}
+
+	public WeatherAction getWeatherAction() {
+		return weatherAction;
 	}
 
 }

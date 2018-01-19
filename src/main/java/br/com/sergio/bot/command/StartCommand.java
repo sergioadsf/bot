@@ -6,8 +6,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
-import org.telegram.telegrambots.api.objects.Message;
-import org.telegram.telegrambots.api.objects.User;
 import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -24,19 +22,16 @@ public class StartCommand extends AbsBotCommand {
 
 	public static final String LOGTAG = "STARTCOMMAND";
 
-	public AbsAction execute(AbsSender absSender, Message message) {
-		User user = message.getFrom();
-		MarkdownWriter mw = MarkdownWriter.start(message.getChat().getId()).userId(user.getId())
-				.name(user.getFirstName(), user.getLastName());
+	public AbsAction execute(AbsSender absSender, MarkdownWriter msg) {
 
-		mw.append("Bem vindo, ").useName();
-		mw.append("Como esta sendo seu dia hoje?");
+		msg.append("Bem vindo, ").useName();
+		msg.append("Como esta sendo seu dia hoje?");
 
 		SendMessage answer = new SendMessage();
-		answer.setChatId(mw.getChatId());
-		answer.setText(mw.get());
+		answer.setChatId(msg.getChatId());
+		answer.setText(msg.get());
 		ReplyKeyboard replyMarkup = new InlineKeyboardMarkup();
-		replyMarkup = getAlertsListKeyboard(user.getId(), "pt");
+		replyMarkup = getAlertsListKeyboard(msg.getUserId(), "pt");
 		answer.setReplyMarkup(replyMarkup);
 
 		try {

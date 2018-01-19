@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.AbsSender;
 
 import br.com.sergio.bot.action.AbsAction;
-import br.com.sergio.bot.command.AbsCommand;
 import br.com.sergio.bot.command.CmdParam;
 import br.com.sergio.bot.exception.AnswerException;
 import br.com.sergio.bot.model.ParamCMD;
@@ -28,11 +27,9 @@ public class CompetitionAction extends AbsFootballAction {
 	@Autowired
 	private TeamConsultAction teamConsultAction;
 
-	@SuppressWarnings("unchecked")
 	public AbsAction action(AbsSender absSender, MarkdownWriter msg, String text) throws AnswerException, Exception {
-		Integer userId = msg.getUserId();
+		ParamCMD<FootSearch> param = getParam(msg);
 		TipoCampeonato tipoCampeonato = isResult(text);
-		ParamCMD<FootSearch> param = AbsCommand.next.get(userId);
 		if (param.getCmdParam() == CmdParam.RESULT_CMD) {
 			putParam(tipoCampeonato, param);
 			getIBotFootballService().askRound(absSender, msg);
@@ -55,12 +52,12 @@ public class CompetitionAction extends AbsFootballAction {
 		if (ALL.equals(text)) {
 			return allConsultAction.action(absSender, msg, text);
 		} else if (GROUP.equals(text)) {
-			return groupConsultAction;
+			return groupConsultAction.askGroup(absSender, msg);
 		} else if (TEAM.equals(text)) {
 			return teamConsultAction;
 		}
 		putParam(tipoCampeonato, param);
-		getIBotFootballService().askGroup(absSender, msg, tipoCampeonato.getValue());
+		getIBotFootballService().ask(absSender, msg, tipoCampeonato.getValue());
 		return this;
 	}
 

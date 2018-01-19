@@ -71,7 +71,7 @@ public class BotWeatherService extends AbsService implements IBotWeatherService 
 	public void askCity(AbsSender absSender, MarkdownWriter msg) {
 		msg.newLine().append("Me diga o nome da cidade?").newLine();
 
-		InlineKeyboardMarkup inlineKeyboard = KeyboardUtil.getListInlineKeyboard(msg.getUserId(), "");
+		InlineKeyboardMarkup inlineKeyboard = KeyboardUtil.getInlineCancelBack(msg.getUserId());
 
 		SendMessage answer = new SendMessage();
 		answer.setReplyMarkup(inlineKeyboard);
@@ -91,9 +91,8 @@ public class BotWeatherService extends AbsService implements IBotWeatherService 
 			throws TelegramApiException {
 		City city = forecast.getCity();
 
-		msg.newLine().append("A previsão para ")
-		.bold(String.format("%s (%s)", city.getName(), city.getCountry()))
-		.append(" nos próximos dias:").newLine();
+		msg.newLine().append("A previsão para ").bold(String.format("%s (%s)", city.getName(), city.getCountry()))
+				.append(" nos próximos dias:").newLine();
 
 		Date data = DateUtil.minDateWithoutTime();
 		for (ForecastDetail detail : forecast.getListForecast()) {
@@ -101,7 +100,7 @@ public class BotWeatherService extends AbsService implements IBotWeatherService 
 			if (data.compareTo(anotherDate) == 0) {
 				continue;
 			}
-			
+
 			data = anotherDate;
 			Main main = detail.getMain();
 			Weather w = detail.getWeather().get(0);
@@ -117,7 +116,7 @@ public class BotWeatherService extends AbsService implements IBotWeatherService 
 		// msg.image("http://openweathermap.org/img/w/" + w.getIcon() + ".png");
 
 		msg.newLine().append("Gostaria de saber de mais alguma cidade? Se sim me diga o nome que irei lhe informar.");
-		InlineKeyboardMarkup inlineKeyboard = KeyboardUtil.getListInlineKeyboard(msg.getUserId(), "");
+		InlineKeyboardMarkup inlineKeyboard = KeyboardUtil.getInlineCancelBack(msg.getUserId());
 
 		SendMessage answer = new SendMessage();
 		answer.setChatId(msg.getChatId());
@@ -158,7 +157,7 @@ public class BotWeatherService extends AbsService implements IBotWeatherService 
 		// msg.image("http://openweathermap.org/img/w/" + w.getIcon() + ".png");
 
 		msg.newLine().append("Gostaria de saber de mais alguma cidade? Se sim me diga o nome que irei lhe informar.");
-		InlineKeyboardMarkup inlineKeyboard = KeyboardUtil.getListInlineKeyboard(msg.getUserId(), "");
+		InlineKeyboardMarkup inlineKeyboard = KeyboardUtil.getInlineCancelBack(msg.getUserId());
 
 		SendMessage answer = new SendMessage();
 		answer.setChatId(msg.getChatId());

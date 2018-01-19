@@ -18,6 +18,8 @@ public interface IBotFootballService extends IService {
 	
 	void findTeam(AbsSender absSender, MarkdownWriter msg, FootSearch footSearch);
 
-	void askGroup(AbsSender absSender, MarkdownWriter msg, int value);
+	void ask(AbsSender absSender, MarkdownWriter msg, int value);
+
+	void askGroup(AbsSender absSender, MarkdownWriter msg, FootSearch fs) throws Exception ;
 
 }

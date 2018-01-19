@@ -27,8 +27,10 @@ public class ConnectService implements IConnectService {
 
 		HttpURLConnection connection = initConnection(target);
 		connection.setRequestMethod("GET");
+		connection.setDoOutput(true);
+		connection.setRequestProperty("Content-Type", "application/json");
+		connection.setRequestProperty("Accept", "application/json");
 
-		connection.getInputStream();
 		return inputStreamToString(connection.getInputStream());
 	}
 

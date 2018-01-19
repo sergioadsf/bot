@@ -11,6 +11,9 @@ import br.com.sergio.bot.util.MarkdownWriter;
 public class WeatherCurrentAction extends AbsWeatherAction {
 
 	public AbsAction action(AbsSender absSender, MarkdownWriter msg, String text) throws AnswerException, Exception {
+		if(isBack(text)) {
+			return null;
+		}
 		getIBotWeatherService().findCurrent(absSender, msg, text);
 
 		return this;

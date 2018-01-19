@@ -3,10 +3,7 @@ package br.com.sergio.bot.command;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
-import org.telegram.telegrambots.api.objects.Chat;
 import org.telegram.telegrambots.api.objects.Location;
-import org.telegram.telegrambots.api.objects.Message;
-import org.telegram.telegrambots.api.objects.User;
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
@@ -20,19 +17,15 @@ public class LocationCommand extends BotLocationCommand {
 	@Autowired
 	private IBotWeatherService iBotWeatherService;
 
-	public AbsAction execute(AbsSender absSender, Message message, Location location) throws Exception {
+	public AbsAction execute(AbsSender absSender, MarkdownWriter msg, Location location) throws Exception {
 
 		try {
 
-			final Chat chat = message.getChat();
-			User user = message.getFrom();
-			MarkdownWriter msg = MarkdownWriter.start(chat.getId()).name(user.getFirstName(), user.getLastName()).userId(user.getId()).useName();
+			msg.useName();
 			iBotWeatherService.findCurrent(absSender, msg, location);
 
 		} catch (Exception e1) {
-			final Chat chat = message.getChat();
-			Long chatId = chat.getId();
-			SendMessage answer = errorMessage(chatId, e1);
+			SendMessage answer = errorMessage(msg.getChatId(), e1);
 
 			try {
 				absSender.sendMessage(answer);
@@ -40,6 +33,8 @@ public class LocationCommand extends BotLocationCommand {
 				e.printStackTrace();
 			}
 		}
+		
+		AbsCommand.next.remove(msg.getUserId());
 
 		return null;
 
@@ -53,5 +48,11 @@ public class LocationCommand extends BotLocationCommand {
 		answer.enableMarkdown(true);
 		return answer;
 	}
+
+	@Override
+	AbsAction execute(AbsSender absSender, MarkdownWriter mw) throws Exception {
+		return null;
+	}
+
 
 }

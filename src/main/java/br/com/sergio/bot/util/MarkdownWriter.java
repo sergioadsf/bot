@@ -103,6 +103,11 @@ public class MarkdownWriter {
 		return this;
 	}
 
+	public MarkdownWriter chatId(Long chatId) {
+		this.chatId = chatId;
+		return this;
+	}
+
 	public String get() {
 		return message.toString();
 	}

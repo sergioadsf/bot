@@ -156,7 +156,7 @@ public class BotFootballService extends AbsService implements IBotFootballServic
 	}
 
 	@Override
-	public void askGroup(AbsSender absSender, MarkdownWriter msg, int value) {
+	public void ask(AbsSender absSender, MarkdownWriter msg, int value) {
 		msg.newLine().append("Gostaria de consultar por time ou grupo especifico? Caso não, selecione 'Todos' abaixo.")
 				.newLine();
 
@@ -174,7 +174,30 @@ public class BotFootballService extends AbsService implements IBotFootballServic
 		} catch (TelegramApiException ex) {
 			ex.printStackTrace();
 		}
+	}
 
+	@Override
+	public void askGroup(AbsSender absSender, MarkdownWriter msg, FootSearch footSearch) throws Exception {
+		
+		List<String> groups = wService.findGroups(footSearch);
+		
+		msg.newLine().append("Favor selecionar o grupo desejado abaixo.")
+				.newLine();
+
+		ReplyKeyboard replyMarkup = new InlineKeyboardMarkup();
+		replyMarkup = KeyboardUtil.getListInlineKeyboard(msg.getUserId(), "pt", groups.toArray(new String[groups.size()]));
+
+		SendMessage answer = new SendMessage();
+		answer.setReplyMarkup(replyMarkup);
+		answer.setChatId(msg.getChatId());
+		answer.setText(msg.get());
+		answer.enableMarkdown(true);
+		try {
+			absSender.sendMessage(answer);
+
+		} catch (TelegramApiException ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	private void sendErrorMessage(AbsSender absSender, MarkdownWriter msg) {

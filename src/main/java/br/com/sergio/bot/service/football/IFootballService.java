@@ -22,4 +22,6 @@ public interface IFootballService {
 	
 	List<TeamPosition> findTeam(FootSearch fooatSearch) throws Exception;
 
+	List<String> findGroups(FootSearch footSearch)  throws Exception;
+
 }

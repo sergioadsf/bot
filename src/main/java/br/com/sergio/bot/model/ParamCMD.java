@@ -1,6 +1,5 @@
 package br.com.sergio.bot.model;
 
-import br.com.sergio.bot.command.AbsBotCommand;
 import br.com.sergio.bot.command.CmdParam;
 
 public class ParamCMD<T extends Object> {

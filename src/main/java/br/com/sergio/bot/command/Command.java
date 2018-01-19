@@ -13,20 +13,29 @@ public class Command extends AbsCommand {
 
 	public void execute(AbsSender sender, final Update update) {
 
+		// AnswerCallbackQuery a = new AnswerCallbackQuery();
+		// a.setCallbackQueryId(callObj.getId());
+		// a.setShowAlert(true);
+		// a.setText("ok");
+		// absSender.answerCallbackQuery(a);
+
+		String text = getCommandText(update);
+		if (isStart(text)) {
+			return;
+		}
 		try {
-			BotApiObject message = getMessage(update);
-			String text = getCommandText(update);
+			BotApiObject botApi = getMessage(update);
 			Integer userId = getUserId(update);
 			AbsAction absActionNext = null;
 			if (isCommand(text)) {
 				next.put(userId, new ParamCMD<Object>(CmdParam.param(text)));
-				absActionNext = this.getCommand(text).execute(sender, message);
-				executeAction(userId, absActionNext);
+				absActionNext = this.getCommand(text).execute(sender, botApi);
+				executeAction(sender, botApi, userId, absActionNext, text);
 			} else {
 				AbsAction absAction = nextAction.get(userId);
 				if (absAction != null) {
-					absActionNext = absAction.execute(sender, message);
-					executeAction(userId, absActionNext);
+					absActionNext = absAction.execute(sender, botApi);
+					executeAction(sender, botApi, userId, absActionNext, text);
 				} else {
 					// MSG UNKNOWN
 				}
@@ -36,17 +45,34 @@ public class Command extends AbsCommand {
 		}
 	}
 
-	private void executeAction(Integer userId, AbsAction absActionNext) {
+	private boolean isStart(String text) {
+		return text.contains(CmdParam.START_CMD.getValue());
+	}
+
+	private void executeAction(AbsSender sender, BotApiObject botApi, Integer userId, AbsAction absActionNext,
+			String text) throws Exception {
 		if (absActionNext == null) {
-			removeUser(userId);
+			removeUser(sender, botApi, userId, text);
 		} else {
 			nextAction.put(userId, absActionNext);
 		}
 	}
 
-	private void removeUser(Integer userId) {
-		next.remove(userId);
+	private void removeUser(AbsSender sender, BotApiObject botApi, Integer userId, String text) throws Exception {
 		nextAction.remove(userId);
+		if (isCancel(text)) {
+			next.remove(userId);
+		} else {
+			if (next.containsKey(userId)) {
+				ParamCMD paramCMD = next.get(userId);
+				AbsAction absActionNext = this.getCommand(paramCMD.getCmdParam().getValue()).execute(sender, botApi);
+				executeAction(sender, botApi, userId, absActionNext, text);
+			}
+		}
+	}
+
+	private boolean isCancel(String text) {
+		return text.contains("cancel");
 	}
 
 	public static boolean isCommand(String text) {

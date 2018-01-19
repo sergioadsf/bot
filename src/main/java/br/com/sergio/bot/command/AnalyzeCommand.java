@@ -35,19 +35,17 @@ public class AnalyzeCommand extends AbsBotAnalyzeCommand {
 	void executeCallback(AbsSender absSender, User user, MarkdownWriter msg, String text)
 			throws AnswerException, Exception {
 
-
-//		if (isCancel(text)) {
-//			cancelMessage(absSender, msg);
-//			AbsCommand.next.remove(msg.getUserId());
-//			return;
-//		}
+		// if (isCancel(text)) {
+		// cancelMessage(absSender, msg);
+		// AbsCommand.next.remove(msg.getUserId());
+		// return;
+		// }
 
 		throw new AnswerException("");
 	}
 
 	@Override
-	void executeMessage(AbsSender absSender, MarkdownWriter msg, String text)
-			throws AnswerException, Exception {
+	void executeMessage(AbsSender absSender, MarkdownWriter msg, String text) throws AnswerException, Exception {
 		if (isAnswerForecast(text)) {
 			iBotWeatherService.findCurrent(absSender, msg, text);
 			return;
@@ -74,11 +72,6 @@ public class AnalyzeCommand extends AbsBotAnalyzeCommand {
 		}
 
 		throw new AnswerException("");
-	}
-
-	@Override
-	public AbsAction execute(AbsSender absSender, Message message) throws Exception {
-		throw new Exception("Not allowed!");
 	}
 
 	private TipoCampeonato isResult(String text) {
@@ -120,6 +113,12 @@ public class AnalyzeCommand extends AbsBotAnalyzeCommand {
 
 	private boolean isAnswerSticker(String text) {
 		return text.contains("imagem");
+	}
+
+	@Override
+	AbsAction execute(AbsSender absSender, MarkdownWriter mw) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

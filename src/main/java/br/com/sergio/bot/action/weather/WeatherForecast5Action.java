@@ -11,8 +11,11 @@ import br.com.sergio.bot.util.MarkdownWriter;
 public class WeatherForecast5Action extends AbsWeatherAction {
 
 	public AbsAction action(AbsSender absSender, MarkdownWriter msg, String text) throws AnswerException, Exception {
-		getIBotWeatherService().forecast5Days(absSender, msg, text);
+		if (isBack(text)) {
+			return null;
+		}
 
+		getIBotWeatherService().forecast5Days(absSender, msg, text);
 		return this;
 	}
 }

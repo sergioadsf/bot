@@ -36,8 +36,8 @@ public class FootballService extends AbsService implements IFootballService {
 
 	@Override
 	public List<TeamPosition> findClassification(int tipoCampeonato) throws Exception {
-		String url = String.format("%s/%s/%d", getBotConfig().getWsUrlFootball(), CLASSIFICATION, tipoCampeonato);
-		String json = this.getConnectService().get(url);
+		String url = String.format("%s/%s/", getBotConfig().getWsUrlFootball(), CLASSIFICATION);
+		String json = this.getConnectService().get(url, String.valueOf(tipoCampeonato));
 		Response<List<TeamPosition>> response = strToObj(json, new TypeReference<Response<List<TeamPosition>>>() {
 		});
 
@@ -64,6 +64,20 @@ public class FootballService extends AbsService implements IFootballService {
 			throws Exception, JsonParseException, JsonMappingException, IOException, NotFoundException {
 		String json = this.getConnectService().post(url, objToStr(fooatSearch));
 		Response<List<TeamPosition>> response = strToObj(json, new TypeReference<Response<List<TeamPosition>>>() {
+		});
+
+		if (!response.isSuccess()) {
+			throw new NotFoundException();
+		}
+
+		return response.getResponse();
+	}
+
+	@Override
+	public List<String> findGroups(FootSearch footSearch) throws Exception {
+		String url = String.format("%s/%s/%d", getBotConfig().getWsUrlFootball(), GROUP, footSearch.getCompetition());
+		String json = this.getConnectService().get(url);
+		Response<List<String>> response = strToObj(json, new TypeReference<Response<List<String>>>() {
 		});
 
 		if (!response.isSuccess()) {

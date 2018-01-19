@@ -47,6 +47,11 @@ public class KeyboardUtil {
 	}
 
 	public static InlineKeyboardMarkup getListInlineKeyboard(Integer userId, String language, String... names) {
+		return getListInlineKeyboard(userId, language, true, names);
+	}
+
+	public static InlineKeyboardMarkup getListInlineKeyboard(Integer userId, String language, boolean isCancel,
+			String... names) {
 		int sizeTotal = names.length;
 		InlineKeyboardMarkup replyKeyboardMarkup = null;
 		List<List<InlineKeyboardButton>> listButtons = new ArrayList<>();
@@ -64,8 +69,11 @@ public class KeyboardUtil {
 			listButtons.add(list);
 		}
 
-		String cancelCommand = getCancelCommand(language);
-		listButtons.add(Arrays.asList(new InlineKeyboardButton(cancelCommand).setCallbackData(cancelCommand.toLowerCase())));
+		if (isCancel) {
+			String cancelCommand = getCancelCommand(language);
+			listButtons.add(Arrays
+					.asList(new InlineKeyboardButton(cancelCommand).setCallbackData(cancelCommand.toLowerCase())));
+		}
 
 		replyKeyboardMarkup = new InlineKeyboardMarkup();
 		replyKeyboardMarkup.setKeyboard(listButtons);
@@ -73,10 +81,20 @@ public class KeyboardUtil {
 		return replyKeyboardMarkup;
 	}
 
+	public static String getCancelCommand() {
+		return String.format("%s Cancelar", EmojiUtil.CROSS_MARK.toString());
+	}
+
 	private static String getCancelCommand(String language) {
 		return String.format("%s Cancelar", EmojiUtil.CROSS_MARK.toString());// String.format(LocalisationUtil.getString("cancel",
-																			// language),
-																			// EmojiUtil.CROSS_MARK.toString());
+		// language),
+		// EmojiUtil.CROSS_MARK.toString());
+	}
+
+	public static InlineKeyboardMarkup getInlineCancelBack(Integer userId, String... names) {
+		return getListInlineKeyboard(userId, "pt", false,
+				String.format("%s %s", EmojiUtil.BACK_WITH_LEFTWARDS_ARROW_ABOVE.toString(), "Voltar"),
+				KeyboardUtil.getCancelCommand());
 	}
 
 }
