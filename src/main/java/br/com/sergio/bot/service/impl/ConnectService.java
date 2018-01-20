@@ -1,13 +1,15 @@
 package br.com.sergio.bot.service.impl;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.Proxy;
-import java.net.URL;
 
+import org.apache.commons.httpclient.HostConfiguration;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.springframework.stereotype.Service;
 
 import br.com.sergio.bot.service.IConnectService;
@@ -23,53 +25,51 @@ public class ConnectService implements IConnectService {
 
 	@Override
 	public final String get(String url) throws Exception {
-		URL target = new URL(url);
+		HttpClient client = new HttpClient();
 
-		HttpURLConnection connection = initConnection(target);
-		connection.setRequestMethod("GET");
-		connection.setDoOutput(true);
-		connection.setRequestProperty("Content-Type", "application/json");
-		connection.setRequestProperty("Accept", "application/json");
+		HttpMethod method = new GetMethod(url);
+		return execute(client, method);
+	}
 
-		return inputStreamToString(connection.getInputStream());
+	private String execute(HttpClient client, HttpMethod method) throws IOException, HttpException {
+		addProxy(client);
+		int statusCode = client.executeMethod(method);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.err.println("Method failed: " + method.getStatusLine());
+		}
+
+		byte[] responseBody = method.getResponseBody();
+
+		return new String(responseBody);
 	}
 
 	@Override
 	public final String post(String url, String params) throws Exception {
-		URL target = new URL(url);
+		PostMethod method = new PostMethod(url);
+		HttpClient client = new HttpClient();
 
-		HttpURLConnection connection = initConnection(target);
-		connection.setRequestMethod("POST");
-		connection.setDoOutput(true);
-		connection.setRequestProperty("Content-Type", "application/json");
-		connection.setRequestProperty("Accept", "application/json");
-
-		OutputStream output = connection.getOutputStream();
-		output.write(params.getBytes("UTF-8"));
-		output.flush();
-
-		return inputStreamToString(connection.getInputStream());
+		method.setRequestEntity(new StringRequestEntity(params, "application/json", "UTF-8"));
+		return execute(client, method);
 	}
 
-	private final HttpURLConnection initConnection(URL target) throws IOException {
-		Proxy proxy = ProxyConfig.get();
-		if (proxy != null) {
-			return (HttpURLConnection) target.openConnection(proxy);
+	private final void addProxy(HttpClient client) throws IOException {
+		String proxyUrl = ProxyConfig.getProxyUrl();
+		if (proxyUrl != null) {
+			HostConfiguration config = client.getHostConfiguration();
+			config.setProxy(proxyUrl, ProxyConfig.getProxyPort());
 		}
 
-		return (HttpURLConnection) target.openConnection();
-
 	}
 
-	private final String inputStreamToString(InputStream is) throws Exception {
-		ByteArrayOutputStream result = new ByteArrayOutputStream();
-		byte[] buffer = new byte[1024];
-		int length;
-		while ((length = is.read(buffer)) != -1) {
-			result.write(buffer, 0, length);
-		}
-
-		return result.toString("UTF-8");
-	}
+//	private final String inputStreamToString(InputStream is) throws Exception {
+//		ByteArrayOutputStream result = new ByteArrayOutputStream();
+//		byte[] buffer = new byte[1024];
+//		int length;
+//		while ((length = is.read(buffer)) != -1) {
+//			result.write(buffer, 0, length);
+//		}
+//
+//		return result.toString("UTF-8");
+//	}
 
 }
