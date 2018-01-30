@@ -2,11 +2,14 @@ package br.com.sergio.bot.service.impl;
 
 import java.io.IOException;
 
+import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
@@ -53,10 +56,19 @@ public class ConnectService implements IConnectService {
 	}
 
 	private final void addProxy(HttpClient client) throws IOException {
-		String proxyUrl = ProxyConfig.getProxyUrl();
-		if (proxyUrl != null) {
+		String[] proxy = ProxyConfig.getProxy();
+		if (proxy != null) {
 			HostConfiguration config = client.getHostConfiguration();
-			config.setProxy(proxyUrl, ProxyConfig.getProxyPort());
+			Integer port = Integer.valueOf(proxy[ProxyConfig.PORT]);
+			String url = proxy[ProxyConfig.URL];
+			config.setProxy(url, port);
+			
+			String username = proxy[ProxyConfig.USERNAME];
+	        String password = proxy[ProxyConfig.PASSWORD];
+	        Credentials credentials = new UsernamePasswordCredentials(username, password);
+	        AuthScope authScope = new AuthScope(url, port);
+
+			client.getState().setProxyCredentials(authScope, credentials);
 		}
 
 	}
