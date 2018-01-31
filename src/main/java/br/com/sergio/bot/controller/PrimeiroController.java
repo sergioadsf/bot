@@ -16,6 +16,6 @@ public class PrimeiroController extends BotController{
 	@GetMapping(path = "/ping")
 	public @ResponseBody Teste teste() {
 
-		return new Teste(1L, getBotConfig().getToken());
+		return new Teste(1L, "ok");
 	}
 }
